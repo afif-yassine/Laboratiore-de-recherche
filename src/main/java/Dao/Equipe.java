@@ -11,9 +11,7 @@ public class Equipe {
     private String nomequipe;
 
     private String axederecherche;
-    @OneToOne(mappedBy = "Equipe")
-    @JoinColumn(name = "fk-idChefEquipe")
-    private Professeur idChefEquipe;
+
 
     private String description;
 
@@ -42,14 +40,6 @@ public class Equipe {
 
     public void setAxederecherche(String axederecherche) {
         this.axederecherche = axederecherche;
-    }
-
-    public Professeur getIdChefEquipe() {
-        return idChefEquipe;
-    }
-
-    public void setIdChefEquipe(Professeur idChefEquipe) {
-        this.idChefEquipe = idChefEquipe;
     }
 
     public String getDescription() {

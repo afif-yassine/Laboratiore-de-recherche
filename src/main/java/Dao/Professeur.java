@@ -12,7 +12,7 @@ public class Professeur extends Membre {
     private Boolean admin ;
     private Boolean chefEquipe ;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idequipe")
     private Equipe equipe;
 
