@@ -1,0 +1,1 @@
+insert into  Professeur(membreid,prenom,nom,email,numero,photo,satatus,admin,chefEquipe) values (11,'yassine','afif','yassine.afif.2002@gmail.com','0659443508','NULL','PH',true,false);

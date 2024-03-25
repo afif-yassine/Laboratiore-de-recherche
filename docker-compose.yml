@@ -1,0 +1,29 @@
+  version: '3.8'
+  services:
+    db:
+      image: postgres
+      container_name: postgresPFE
+      restart: always
+      environment:
+        POSTGRES_ROOT_PASSWORD: rootpassword
+        POSTGRES_DATABASE: mydatabase
+        POSTGRES_USER: yassine
+        POSTGRES_PASSWORD: admin
+      ports:
+        - "5432:5432"
+      volumes:
+        - ./dbdata:/data/postgres
+      networks:
+        - app-network
+
+  networks:
+    app-network:
+      driver: bridge
+
+  volumes:
+    dbdata:
+
+
+
+
+
