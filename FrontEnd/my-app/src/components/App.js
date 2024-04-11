@@ -12,8 +12,8 @@ import AboutUs from './Home/AboutUs'; // Correct the import path to AboutUs.js
 import ContactUs  from './Home/ContactUs'; // Correct the import path to ContactUs.js
 import RegistrationForm  from './Home/RegistrationForm'; // Correct the import path to ContactUs.js
 import SignUp  from './Home/SignUp';
-import Dashboard  from './Dashboard/Dashboard';
-
+import Dashboard from "./Dashboard/Dashboard";
+import ProfDashboard from "./ProfDashboard/ProfDashboard";
 
 function App() {
     return (
@@ -27,6 +27,7 @@ function App() {
                     <Route path="/login" element={<RegistrationForm />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/Dashboard" element={<Dashboard />} />
+                    <Route path="/ProfDashboard" element={<ProfDashboard />} />
                     {/* Add additional routes for other pages */}
                 </Routes>
                 <Footer />

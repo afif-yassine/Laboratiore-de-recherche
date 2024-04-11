@@ -10,14 +10,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme/theme';
 
 // Import notification sub-components
-import DoctorantSignUpRequests from './Notifications/DoctorantSignUpRequests';
-import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
-import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
-import ProfileSettings from './ProfileSettings/ProfileSettings';
+import DoctorantSignUpRequests from './NotificationProf/DoctorantSignUpRequests';
+import ProfileProfSettings from "./ProfileProfSettings/ProfileProfSettings";
+
 
 const drawerWidth = 240;
 
-const Dashboard = () => {
+const ProfDashboard = () => {
     const [open, setOpen] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState('');
 
@@ -34,17 +33,13 @@ const Dashboard = () => {
             case 'Discussion':
                 return <Typography variant="body2">Discussion Content</Typography>;
             case 'ProfileSettings':
-                return <ProfileSettings  />;
+                return <ProfileProfSettings  />;
             case 'Announcements':
                 return <Typography variant="body2">Announcements Content</Typography>;
             case 'Publications':
                 return <Typography variant="body2">Publications Content</Typography>;
             case 'DoctorantSignUpRequests':
                 return <DoctorantSignUpRequests />;
-            case 'ProfesseurSignUpRequests':
-                return <ProfesseurSignUpRequests />;
-            case 'ProfesseurChangeTeamRequests':
-                return <ProfesseurChangeTeamRequests />;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -84,12 +79,6 @@ const Dashboard = () => {
                                     <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('DoctorantSignUpRequests')}>
                                         <ListItemText primary="Doctorant Sign-up Requests" />
                                     </ListItem>
-                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('ProfesseurSignUpRequests')}>
-                                        <ListItemText primary="Professeur Sign-up Requests" />
-                                    </ListItem>
-                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('ProfesseurChangeTeamRequests')}>
-                                        <ListItemText primary="Professeur Change Team Requests" />
-                                    </ListItem>
                                 </List>
                             </Collapse>
                             {/* Other Main Menu Items */}
@@ -128,4 +117,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default ProfDashboard;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { List, ListItem, ListItemText, Typography, Paper, Box, Button, Grid } from '@mui/material';
-
-
+import { List, ListItem, ListItemText, Typography, Paper, Box, Button, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 const ProfesseurChangeTeamRequests = () => {
     const [changeRequests, setChangeRequests] = useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [currentRequest, setCurrentRequest] = useState({ id: null, action: '' });
 
     useEffect(() => {
         axios.get('http://localhost:8080/admin/NoChangeEquipe')
@@ -34,14 +34,40 @@ const ProfesseurChangeTeamRequests = () => {
             .catch(error => console.error('Failed to fetch change team requests:', error));
     }, []);
 
+    const handleOpenDialog = (id, action) => {
+        setCurrentRequest({ id, action });
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    const confirmAction = () => {
+        if (currentRequest.action === 'accept') {
+            handleAcceptRequest(currentRequest.id);
+        } else if (currentRequest.action === 'refuse') {
+            handleRefuseRequest(currentRequest.id);
+        }
+        handleCloseDialog();
+    };
+
     const handleAcceptRequest = (id) => {
-        console.log(`Accepting change team request for Professeur ID: ${id}`);
-        // Implement accept request logic here
+        axios.put(`http://localhost:8080/admin/accepteChangement/${id}`)
+            .then(() => {
+                setChangeRequests(changeRequests.filter(request => request.id !== id));
+                console.log(`Accepted change team request for Professeur ID: ${id}`);
+            })
+            .catch(error => console.error(`Failed to accept change team request for Professeur ID ${id}:`, error));
     };
 
     const handleRefuseRequest = (id) => {
-        console.log(`Refusing change team request for Professeur ID: ${id}`);
-        // Implement refuse request logic here
+        axios.delete(`http://localhost:8080/admin/refuseChangement/${id}`)
+            .then(() => {
+                setChangeRequests(changeRequests.filter(request => request.id !== id));
+                console.log(`Refused change team request for Professeur ID: ${id}`);
+            })
+            .catch(error => console.error(`Failed to refuse change team request for Professeur ID ${id}:`, error));
     };
 
     return (
@@ -51,25 +77,45 @@ const ProfesseurChangeTeamRequests = () => {
                 <List>
                     {changeRequests.map(request => (
                         <ListItem key={request.id} divider>
-                            <Grid container spacing={2} >
+                            <Grid container spacing={2}>
                                 <Grid item xs={12} md={6}>
                                     <ListItemText
                                         primary={`Professor: ${request.profName}`}
-                                        secondary={`email: ${request.email}`}
+                                        secondary={`Email: ${request.email}`}
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={6}>
                                     <ListItemText
-                                        primary={`New Team Requested : ${request.equipeName}`}
+                                        primary={`New Team Requested: ${request.equipeName}`}
                                     />
                                 </Grid>
                             </Grid>
-                            <Button onClick={() => handleAcceptRequest(request.id)} color="primary">Accept</Button>
-                            <Button onClick={() => handleRefuseRequest(request.id)} color="secondary">Refuse</Button>
+                            <Button onClick={() => handleOpenDialog(request.id, 'accept')} color="primary">Accept</Button>
+                            <Button onClick={() => handleOpenDialog(request.id, 'refuse')} color="secondary">Refuse</Button>
                         </ListItem>
                     ))}
                 </List>
             </Paper>
+
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Confirm Action"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to {currentRequest.action} the change team request?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={confirmAction} autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

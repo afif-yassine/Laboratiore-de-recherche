@@ -1,4 +1,4 @@
-// ./ProfileSettings/ProfileSettings.js
+// ./ProfileProfSettings/ProfileProfSettings.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -22,7 +22,7 @@ import UpdateProfile from './UpdateProfile'; // Make sure to import the UpdatePr
 import theme from '../../../theme/theme';
 
 
-const ProfileSettings = ({ professorId = 60 }) => {
+const ProfileProfSettings = ({ professorId = 60 }) => {
     const [professorDetails, setProfessorDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -124,4 +124,4 @@ const ProfileSettings = ({ professorId = 60 }) => {
     );
 };
 
-export default ProfileSettings;
+export default ProfileProfSettings;

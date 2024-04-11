@@ -63,7 +63,7 @@ public class InscriptiondoctorantServiceImpl implements InscriptiondoctorantServ
         List<Doctorant> Doctorants = inscriptionDoctorantRepository.findByValideprofFalse().stream().map(InscriptionDoctorant::getDoctorant).toList();
         List<Doctorant> DoctorantsFilter= new ArrayList<>();
         for(Doctorant doctorant1 : Doctorants){
-            if (doctorant1.getEncadrant().getId()!=id){
+            if (doctorant1.getEncadrant().getId()==id){
                 DoctorantsFilter.add(doctorant1);
             }
         }

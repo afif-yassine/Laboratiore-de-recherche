@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-const DoctorantSignUpRequests = () => {
+const DoctorantSignUpRequests = ({ idProfesseur = 74 }) => {
     const [doctorants, setDoctorants] = useState([]);
     const [encadrants, setEncadrants] = useState({});
     const [openDialog, setOpenDialog] = useState(false);
-    const [currentDoctorant, setCurrentDoctorant] = useState({id: null, action: ''}); // Store the ID and action ('accept' or 'refuse') of the current doctorant
+    const [currentDoctorant, setCurrentDoctorant] = useState({id: null, action: ''});
 
     useEffect(() => {
-        axios.get('http://localhost:8080/admin/NoValideDoctoran')
+        axios.get(`http://localhost:8080/professeur/NoValideDoctoran/${idProfesseur}`)
             .then(response => {
                 const doctorantsData = response.data;
                 setDoctorants(doctorantsData);
@@ -25,7 +25,7 @@ const DoctorantSignUpRequests = () => {
                 });
             })
             .catch(error => console.error('Failed to fetch doctorants:', error));
-    }, []);
+    }, [idProfesseur]);
 
     const handleOpenDialog = (id, action) => {
         setCurrentDoctorant({id, action});
@@ -93,7 +93,6 @@ const DoctorantSignUpRequests = () => {
                 </List>
             </Paper>
 
-            {/* Confirmation Dialog */}
             <Dialog
                 open={openDialog}
                 onClose={handleCloseDialog}
