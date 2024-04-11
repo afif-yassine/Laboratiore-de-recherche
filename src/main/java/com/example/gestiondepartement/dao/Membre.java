@@ -13,14 +13,29 @@ public abstract class Membre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Column(name = "isactive")
+    private boolean active;
+
+
+    private String password;
+
     private String nom ;
+
     private String prenom ;
     private String email ;
     private String numero ;
-
     public Membre() {
     }
 
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public Long getId() {
         return id;
@@ -60,5 +75,14 @@ public abstract class Membre {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

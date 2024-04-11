@@ -11,8 +11,12 @@ public class DoctorantMapper {
         doctorantDTO.setEmail(doctorant.getEmail());
         doctorantDTO.setPrenom(doctorant.getPrenom());
         doctorantDTO.setNumero(doctorant.getNumero());
+        doctorantDTO.setActive(doctorant.isActive());
+        doctorantDTO.setPassword(doctorant.getPassword());
         if(doctorant.getEncadrant() != null)
-        doctorantDTO.setIdencadrant(doctorant.getEncadrant().getId());
+            doctorantDTO.setIdencadrant(doctorant.getEncadrant().getId());
+        if(doctorant.getCoEncadrant() != null)
+            doctorantDTO.setCoEncadrant(doctorant.getCoEncadrant().getId());
         return doctorantDTO;
     }
 
@@ -23,6 +27,8 @@ public class DoctorantMapper {
         doctorant.setEmail(doctorantDTO.getEmail());
         doctorant.setPrenom(doctorantDTO.getPrenom());
         doctorant.setNumero(doctorantDTO.getNumero());
+        doctorant.setActive(doctorantDTO.isActive());
+        doctorant.setPassword(doctorantDTO.getPassword());
         return doctorant;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.gestiondepartement.service;
+package com.example.gestiondepartement.service.implimentation;
 
 import com.example.gestiondepartement.rest.DoctorantDTO;
 import com.example.gestiondepartement.rest.ProfesseurDTO;
@@ -15,4 +15,6 @@ public interface DoctorantService {
     String removeDoctorant(Long id);
 
     ProfesseurDTO getEncadrantDeDoctorant(Long id);
+
+    DoctorantDTO updateDoctorant(DoctorantDTO doctorantDTO);
 }

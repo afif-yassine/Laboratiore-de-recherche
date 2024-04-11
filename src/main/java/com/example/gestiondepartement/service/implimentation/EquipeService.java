@@ -1,4 +1,4 @@
-package com.example.gestiondepartement.service;
+package com.example.gestiondepartement.service.implimentation;
 
 import com.example.gestiondepartement.dao.Equipe;
 import com.example.gestiondepartement.rest.EquipeDTO;
@@ -10,11 +10,14 @@ import java.util.List;
 @Service
 public interface EquipeService {
 
+   public String deleteById(Long id);
+
    public EquipeDTO create(EquipeDTO equipeDTO);
 
 
    List<EquipeDTO> getAllEquipe();
 
-   EquipeDTO geById(String id);
+   EquipeDTO geById(Long id);
 
+   EquipeDTO updateEquipe(EquipeDTO equipeDTO);
 }

@@ -15,6 +15,30 @@ public class ProfesseurDTO {
     private Boolean isadmin;
     private Boolean ischef;
     private Long idequipe;
+    private boolean active;
+
+    private String password;
+
+
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
 
     public String getStatus() {
         return status;

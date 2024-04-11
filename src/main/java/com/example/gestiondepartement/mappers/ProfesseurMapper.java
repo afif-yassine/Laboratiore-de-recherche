@@ -3,7 +3,6 @@ package com.example.gestiondepartement.mappers;
 import com.example.gestiondepartement.dao.Professeur;
 import com.example.gestiondepartement.dao.repository.EquipeRepository;
 import com.example.gestiondepartement.rest.ProfesseurDTO;
-import com.example.gestiondepartement.service.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProfesseurMapper {
@@ -20,6 +19,8 @@ public class ProfesseurMapper {
         professeurDTO.setEmail(professeur.getEmail());
         professeurDTO.setPrenom(professeur.getPrenom());
         professeurDTO.setNumero(professeur.getNumero());
+        professeurDTO.setActive(professeur.isActive());
+        professeurDTO.setPassword(professeur.getPassword());
 
         //verifier le reste
 
@@ -42,7 +43,8 @@ public class ProfesseurMapper {
         professeur.setEmail(professeurDTO.getEmail());
         professeur.setPrenom(professeurDTO.getPrenom());
         professeur.setNumero(professeurDTO.getNumero());
-
+        professeur.setActive(professeurDTO.isActive());
+        professeur.setPassword(professeurDTO.getPassword());
 
         //verifier le reste
 

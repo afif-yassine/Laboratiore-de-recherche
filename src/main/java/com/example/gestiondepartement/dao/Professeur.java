@@ -4,6 +4,8 @@ import com.example.gestiondepartement.dao.Equipe;
 import com.example.gestiondepartement.dao.Membre;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "Professeur")
 public class Professeur extends Membre {
@@ -22,6 +24,7 @@ public class Professeur extends Membre {
         this.ischef = ischef;
         this.equipe = equipe;
     }
+
 
     public Professeur() {
     }

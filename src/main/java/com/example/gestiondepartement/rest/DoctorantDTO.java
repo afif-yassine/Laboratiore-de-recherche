@@ -1,9 +1,10 @@
 package com.example.gestiondepartement.rest;
 
+import com.example.gestiondepartement.dao.Professeur;
 import jakarta.persistence.Id;
 
 public class DoctorantDTO {
-    @Id
+
     private Long id;
 
     private String nom ;
@@ -12,6 +13,36 @@ public class DoctorantDTO {
     private String email ;
     private String numero ;
     private Long idencadrant;
+
+
+    private boolean active;
+    private String password;
+    private Long coEncadrant;
+
+    public Long getCoEncadrant() {
+        return coEncadrant;
+    }
+
+    public void setCoEncadrant(Long coEncadrant) {
+        this.coEncadrant = coEncadrant;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
 
     public Long getIdencadrant() {

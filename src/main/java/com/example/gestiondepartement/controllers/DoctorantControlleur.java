@@ -1,15 +1,14 @@
 package com.example.gestiondepartement.controllers;
 
 
-import com.example.gestiondepartement.dao.Professeur;
 import com.example.gestiondepartement.rest.DoctorantDTO;
 import com.example.gestiondepartement.rest.ProfesseurDTO;
-import com.example.gestiondepartement.service.DoctorantService;
+import com.example.gestiondepartement.service.implimentation.DoctorantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/doctorant")
 public class DoctorantControlleur {
@@ -18,7 +17,7 @@ public class DoctorantControlleur {
     private DoctorantService doctorantService;
 
 
-    @PostMapping("/create")
+    @PostMapping("/inscription")
     public DoctorantDTO insertDoctorantInDataBase(@RequestBody DoctorantDTO doctorantDTO){
         return doctorantService.insertDoctorantInDataBase(doctorantDTO);
     }
@@ -31,6 +30,11 @@ public class DoctorantControlleur {
     @DeleteMapping("/delete/{id}")
     public String removeDoctorant (@PathVariable("id") Long id){
         return  doctorantService.removeDoctorant(id);
+    }
+
+    @PutMapping("/update")
+    public DoctorantDTO updateDoctorant(@RequestBody DoctorantDTO doctorantDTO){
+        return doctorantService.updateDoctorant(doctorantDTO);
     }
 
     @GetMapping("/encadrant/{id}")

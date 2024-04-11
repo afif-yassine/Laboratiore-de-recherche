@@ -19,6 +19,7 @@ public class EquipeMapper {
 
     public static Equipe toEquipe (EquipeDTO equipeDTO){
 
+
         Equipe equipe = new Equipe();
         equipe.setId(equipeDTO.getId());
         equipe.setAxederecherche(equipeDTO.getAxederecherche());

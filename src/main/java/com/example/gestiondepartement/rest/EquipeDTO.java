@@ -6,7 +6,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 public class EquipeDTO {
-    @Id
+
     private Long id;
 
     private String nom;

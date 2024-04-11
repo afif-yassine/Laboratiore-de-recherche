@@ -1,13 +1,16 @@
-package com.example.gestiondepartement.service.implimentation;
+package com.example.gestiondepartement.service;
 
 import com.example.gestiondepartement.dao.Doctorant;
+import com.example.gestiondepartement.dao.repository.ChangementEquipeRepository;
 import com.example.gestiondepartement.dao.repository.DoctorantRepository;
 import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
 import com.example.gestiondepartement.mappers.DoctorantMapper;
 import com.example.gestiondepartement.mappers.ProfesseurMapper;
 import com.example.gestiondepartement.rest.DoctorantDTO;
 import com.example.gestiondepartement.rest.ProfesseurDTO;
-import com.example.gestiondepartement.service.DoctorantService;
+import com.example.gestiondepartement.service.implimentation.ChangementEquipeService;
+import com.example.gestiondepartement.service.implimentation.DoctorantService;
+import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +23,18 @@ public class DoctorantServiceImpl implements DoctorantService {
 
     @Autowired
     ProfesseurRepository professeurRepository;
+
+    @Autowired
+    InscriptiondoctorantService inscriptiondoctorantService;
+
     @Override
     public DoctorantDTO insertDoctorantInDataBase(DoctorantDTO doctorantDTO){
         Doctorant doctorant = DoctorantMapper.toDoctorant(doctorantDTO);
         doctorant.setEncadrant(professeurRepository.findById(doctorantDTO.getIdencadrant()).get());
+        if(doctorantDTO.getCoEncadrant()!=null)
+        doctorant.setCoEncadrant(professeurRepository.findById(doctorantDTO.getCoEncadrant()).get());
         doctorantRepository.save(doctorant);
+        inscriptiondoctorantService.createInscreption(doctorant);
         return DoctorantMapper.toDoctorantDTO(doctorant);
     }
 
@@ -41,8 +51,18 @@ public class DoctorantServiceImpl implements DoctorantService {
     }
 
     @Override
+    public DoctorantDTO updateDoctorant(DoctorantDTO doctorantDTO) {
+        Doctorant doctorant = DoctorantMapper.toDoctorant(doctorantDTO);
+        doctorant.setEncadrant(professeurRepository.findById(doctorantDTO.getIdencadrant()).get());
+        doctorant.setCoEncadrant(professeurRepository.findById(doctorantDTO.getCoEncadrant()).get());
+        doctorantRepository.save(doctorant);
+        return DoctorantMapper.toDoctorantDTO(doctorant);
+    }
+
+    @Override
     public List<DoctorantDTO> getAllDoctorant() {
         List<Doctorant> doctorants = doctorantRepository.findAll();
         return doctorants.stream().map(DoctorantMapper::toDoctorantDTO).toList();
     }
+
 }
