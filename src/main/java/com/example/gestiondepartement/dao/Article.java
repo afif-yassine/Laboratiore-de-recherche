@@ -1,22 +1,31 @@
 package com.example.gestiondepartement.dao;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
+import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Table(name = "Article")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String DOI;
-    public String nom;
-    public String text;
-    public Date date;
+    private String titre;
+
+    private String description;
+
+    @Temporal(TemporalType.DATE)
+    private Date publicationDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "article_authors", // Corrected table name for clarity and correctness
+            joinColumns = @JoinColumn(name = "article_id"), // Specifies the column used for joining with the Article table
+            inverseJoinColumns = @JoinColumn(name = "membre_id") // Specifies the column used for joining with the Membre table
+    )
+    private List<Membre> authors;
 
     public Long getId() {
         return id;
@@ -26,35 +35,35 @@ public class Article {
         this.id = id;
     }
 
-    public String getDOI() {
-        return DOI;
+    public String getTitre() {
+        return titre;
     }
 
-    public void setDOI(String DOI) {
-        this.DOI = DOI;
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
-    public String getNom() {
-        return nom;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getText() {
-        return text;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
-    public Date getDate() {
-        return date;
+    public List<Membre> getAuthors() {
+        return authors;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setAuthors(List<Membre> authors) {
+        this.authors = authors;
     }
 }

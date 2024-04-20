@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem, ListItemIcon, ListItemText, Typography, Collapse } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import ForumIcon from '@mui/icons-material/Forum';
-import SettingsIcon from '@mui/icons-material/Settings';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
-import PublishIcon from '@mui/icons-material/Publish';
-import { ThemeProvider } from '@mui/material/styles';
+import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem, ListItemIcon, ListItemText, Typography, Collapse, ThemeProvider } from '@mui/material';
+import { ExpandLess, ExpandMore, Notifications, Forum, Settings, Announcement, Publish } from '@mui/icons-material';
 import theme from '../../theme/theme';
 
 // Import notification sub-components
@@ -14,6 +8,7 @@ import DoctorantSignUpRequests from './Notifications/DoctorantSignUpRequests';
 import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
 import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
+import Articles from './Articles/Articles';  // Adjust the path as necessary if it differs
 
 const drawerWidth = 240;
 
@@ -34,7 +29,7 @@ const Dashboard = () => {
             case 'Discussion':
                 return <Typography variant="body2">Discussion Content</Typography>;
             case 'ProfileSettings':
-                return <ProfileSettings  />;
+                return <ProfileSettings />;
             case 'Announcements':
                 return <Typography variant="body2">Announcements Content</Typography>;
             case 'Publications':
@@ -45,6 +40,8 @@ const Dashboard = () => {
                 return <ProfesseurSignUpRequests />;
             case 'ProfesseurChangeTeamRequests':
                 return <ProfesseurChangeTeamRequests />;
+            case 'Articles':  // Ensure you have added this case
+                return <Articles />;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -74,7 +71,7 @@ const Dashboard = () => {
                         <List>
                             <ListItem button onClick={handleClick}>
                                 <ListItemIcon>
-                                    <NotificationsIcon />
+                                    <Notifications />
                                 </ListItemIcon>
                                 <ListItemText primary="Notifications" />
                                 {open ? <ExpandLess /> : <ExpandMore />}
@@ -92,22 +89,25 @@ const Dashboard = () => {
                                     </ListItem>
                                 </List>
                             </Collapse>
-                            {/* Other Main Menu Items */}
                             <ListItem button onClick={() => handleMenuItemClick('Discussion')}>
-                                <ListItemIcon><ForumIcon /></ListItemIcon>
+                                <ListItemIcon><Forum /></ListItemIcon>
                                 <ListItemText primary="Discussion" />
                             </ListItem>
                             <ListItem button onClick={() => handleMenuItemClick('ProfileSettings')}>
-                                <ListItemIcon><SettingsIcon /></ListItemIcon>
+                                <ListItemIcon><Settings /></ListItemIcon>
                                 <ListItemText primary="Paramètre de Profile" />
                             </ListItem>
                             <ListItem button onClick={() => handleMenuItemClick('Announcements')}>
-                                <ListItemIcon><AnnouncementIcon /></ListItemIcon>
-                                <ListItemText primary="Annoncements" />
+                                <ListItemIcon><Announcement /></ListItemIcon>
+                                <ListItemText primary="Announcements" />
                             </ListItem>
                             <ListItem button onClick={() => handleMenuItemClick('Publications')}>
-                                <ListItemIcon><PublishIcon /></ListItemIcon>
+                                <ListItemIcon><Publish /></ListItemIcon>
                                 <ListItemText primary="Publications" />
+                            </ListItem>
+                            <ListItem button onClick={() => handleMenuItemClick('Articles')}>
+                                <ListItemIcon><Publish /></ListItemIcon>
+                                <ListItemText primary="Manage Articles" />
                             </ListItem>
                         </List>
                     </Box>

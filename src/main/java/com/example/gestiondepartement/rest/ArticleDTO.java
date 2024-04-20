@@ -1,16 +1,29 @@
 package com.example.gestiondepartement.rest;
 
 import java.util.Date;
+import java.util.List;
 
 public class ArticleDTO {
 
-    public Long id;
+    private Long id;
+    private String titre;
+    private String description;
+    private Date publicationDate;
+    // Assuming you want to only send basic member information like IDs or names
+    private List<Long> authorIds;
 
-    public String DOI;
-    public String nom;
-    public String text;
-    public Date date;
+    // Constructors
+    public ArticleDTO() {}
 
+    public ArticleDTO(Long id, String titre, String description, Date publicationDate, List<Long> authorIds) {
+        this.id = id;
+        this.titre = titre;
+        this.description = description;
+        this.publicationDate = publicationDate;
+        this.authorIds = authorIds;
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -19,35 +32,36 @@ public class ArticleDTO {
         this.id = id;
     }
 
-    public String getDOI() {
-        return DOI;
+    public String getTitre() {
+        return titre;
     }
 
-    public void setDOI(String DOI) {
-        this.DOI = DOI;
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
-    public String getNom() {
-        return nom;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getText() {
-        return text;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
-    public Date getDate() {
-        return date;
+    public List<Long> getAuthorIds() {
+        return authorIds;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setAuthorIds(List<Long> authorIds) {
+        this.authorIds = authorIds;
     }
 }
+
