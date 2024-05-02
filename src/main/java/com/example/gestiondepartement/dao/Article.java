@@ -16,6 +16,9 @@ public class Article {
 
     private String description;
 
+    @Column(name = "isactive")
+    private boolean isActive;
+
     @Temporal(TemporalType.DATE)
     private Date publicationDate;
 
@@ -26,6 +29,14 @@ public class Article {
             inverseJoinColumns = @JoinColumn(name = "membre_id") // Specifies the column used for joining with the Membre table
     )
     private List<Membre> authors;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public Long getId() {
         return id;

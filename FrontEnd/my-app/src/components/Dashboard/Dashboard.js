@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem, ListItemIcon, ListItemText, Typography, Collapse, ThemeProvider } from '@mui/material';
-import { ExpandLess, ExpandMore, Notifications, Forum, Settings, Announcement, Publish } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, Notifications, Forum, Settings, Announcement, Publish,CalendarViewDaySharp,Article, LibraryBooks,AddSharp } from '@mui/icons-material';
 import theme from '../../theme/theme';
 
-// Import notification sub-components
+// Import notification and settings components
 import DoctorantSignUpRequests from './Notifications/DoctorantSignUpRequests';
 import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
 import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
-import Articles from './Articles/Articles';  // Adjust the path as necessary if it differs
+import Articles from './Articles/Articles'; // Ensure the path is correct
+//import CreateArticle from './Articles/CreateArticle'; // Path to the component that handles article creation
+//import AllArticles from './Articles/AllArticles'; // Path to the component that lists all articles
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
     const [open, setOpen] = useState(false);
+    const [articlesOpen, setArticlesOpen] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState('');
 
-    const handleClick = () => {
-        setOpen(!open);
+    const handleClick = (menu) => {
+        if (menu === 'notifications') {
+            setOpen(!open);
+        } else if (menu === 'articles') {
+            setArticlesOpen(!articlesOpen);
+        }
     };
 
     const handleMenuItemClick = (componentName) => {
@@ -40,8 +47,12 @@ const Dashboard = () => {
                 return <ProfesseurSignUpRequests />;
             case 'ProfesseurChangeTeamRequests':
                 return <ProfesseurChangeTeamRequests />;
-            case 'Articles':  // Ensure you have added this case
-                return <Articles />;
+            case 'CreateArticle':
+                return <Articles/>;
+            case 'AllArticles':
+                return <Typography variant="body2">Announcements Content</Typography>;
+            case 'MyArticles':
+                return <Typography variant="body2">Announcements Content</Typography>;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -69,7 +80,7 @@ const Dashboard = () => {
                     <Toolbar />
                     <Box sx={{ overflow: 'auto' }}>
                         <List>
-                            <ListItem button onClick={handleClick}>
+                            <ListItem button onClick={() => handleClick('notifications')}>
                                 <ListItemIcon>
                                     <Notifications />
                                 </ListItemIcon>
@@ -105,10 +116,27 @@ const Dashboard = () => {
                                 <ListItemIcon><Publish /></ListItemIcon>
                                 <ListItemText primary="Publications" />
                             </ListItem>
-                            <ListItem button onClick={() => handleMenuItemClick('Articles')}>
-                                <ListItemIcon><Publish /></ListItemIcon>
-                                <ListItemText primary="Manage Articles" />
+                            <ListItem button onClick={() => handleClick('articles')}>
+                                <ListItemIcon><LibraryBooks /></ListItemIcon>
+                                <ListItemText primary="Articles" />
+                                {articlesOpen ? <ExpandLess /> : <ExpandMore />}
                             </ListItem>
+                            <Collapse in={articlesOpen} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('CreateArticle')}>
+                                        <ListItemIcon><AddSharp /></ListItemIcon>
+                                        <ListItemText primary="Nouveau Article" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('AllArticles')}>
+                                        <ListItemIcon><CalendarViewDaySharp /></ListItemIcon>
+                                        <ListItemText primary="Articles" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('MyArticles')}>
+                                        <ListItemIcon><Article /></ListItemIcon>
+                                        <ListItemText primary="Mes Articles" />
+                                    </ListItem>
+                                </List>
+                            </Collapse>
                         </List>
                     </Box>
                 </Drawer>

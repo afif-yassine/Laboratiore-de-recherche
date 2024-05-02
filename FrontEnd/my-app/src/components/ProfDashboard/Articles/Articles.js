@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Typography, TextField, Paper, Snackbar, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Button, Typography, TextField, Paper, Snackbar } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 
@@ -13,7 +13,6 @@ const Articles = () => {
     const [content, setContent] = useState('');
     const [authorIds, setAuthorIds] = useState([]);
     const [authors, setAuthors] = useState([]);
-    const [isActive, setIsActive] = useState(false); // New state for isActive
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');
@@ -30,8 +29,7 @@ const Articles = () => {
             titre: title,
             description: content,
             publicationDate: new Date(), // Today's date
-            authorIds: authorIds.map(author => author.id),
-            isActive: isActive // Including the new isActive attribute
+            authorIds: authorIds.map(author => author.id)
         };
 
         axios.post('http://localhost:8080/Article/create', articleData)
@@ -42,7 +40,6 @@ const Articles = () => {
                 setTitle('');
                 setContent('');
                 setAuthorIds([]);
-                setIsActive(false); // Reset to default false
             })
             .catch(error => {
                 console.error('Failed to create article:', error);

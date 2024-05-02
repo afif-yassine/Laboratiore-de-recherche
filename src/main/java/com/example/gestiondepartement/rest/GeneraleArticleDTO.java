@@ -1,12 +1,12 @@
 package com.example.gestiondepartement.rest;
 
+import com.example.gestiondepartement.dao.Membre;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.Date;
 import java.util.List;
-
-public class ArticleDTO {
+@Data
+public class GeneraleArticleDTO {
 
     private Long id;
     private String titre;
@@ -14,17 +14,18 @@ public class ArticleDTO {
     private Date publicationDate;
     private Boolean isActive;
     // Assuming you want to only send basic member information like IDs or names
-    private List<Long> authorIds;
+    private List<Membre> authorIds;
 
     // Constructors
-    public ArticleDTO() {}
+    public GeneraleArticleDTO() {
+    }
 
-    public ArticleDTO(Long id, String titre, String description, Date publicationDate, List<Long> authorIds, Boolean isActive) {
+    public GeneraleArticleDTO(Long id, String titre, String description, Date publicationDate, List<Long> authorIds, Boolean isActive) {
         this.id = id;
         this.titre = titre;
         this.description = description;
         this.publicationDate = publicationDate;
-        this.authorIds = authorIds;
+        //todo : authorIds  Long -> Membre
         this.isActive = isActive;
     }
 
@@ -70,12 +71,4 @@ public class ArticleDTO {
         this.publicationDate = publicationDate;
     }
 
-    public List<Long> getAuthorIds() {
-        return authorIds;
-    }
-
-    public void setAuthorIds(List<Long> authorIds) {
-        this.authorIds = authorIds;
-    }
 }
-
