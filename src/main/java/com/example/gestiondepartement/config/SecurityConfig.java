@@ -27,11 +27,15 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf
                         .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/api")) // Disable CSRF for /api
+                        .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/professeur"))
+                        .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/equipe"))
                 )
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // Register JWT filter
 
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/professeur/all").permitAll()
+                        .requestMatchers("/equipe/all").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

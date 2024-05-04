@@ -2,6 +2,7 @@ package com.example.gestiondepartement.service;
 
 import com.example.gestiondepartement.dao.Doctorant;
 import com.example.gestiondepartement.dao.Membre;
+import com.example.gestiondepartement.dao.Professeur;
 import com.example.gestiondepartement.dao.repository.DoctorantRepository;
 import com.example.gestiondepartement.dao.repository.MemberRepository;
 import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
@@ -31,19 +32,30 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Membre professeur = professeurRepository.findByEmail(email);
-        Membre doctorant = doctorantRepository.findByEmail(email);
+        Professeur professeur = professeurRepository.findByEmail(email);
+        Doctorant doctorant = doctorantRepository.findByEmail(email);
 
 
         if (professeur == null && doctorant == null ) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("Admin"));
+        List<GrantedAuthority> authorities ;
 
-        if(professeur != null )
+        if(professeur != null ){
+            if(professeur.getIsadmin()){
+                authorities = Collections.singletonList(new SimpleGrantedAuthority("Admin"));
+                return new User(professeur.getEmail(), professeur.getPassword(), authorities);
+            }
+            if(professeur.getIschef()){
+                authorities = Collections.singletonList(new SimpleGrantedAuthority("Chef"));
+                return new User(professeur.getEmail(), professeur.getPassword(), authorities);
+            }
+            authorities = Collections.singletonList(new SimpleGrantedAuthority("Professeur"));
             return new User(professeur.getEmail(), professeur.getPassword(), authorities);
 
+        }
 
+        authorities = Collections.singletonList(new SimpleGrantedAuthority("Doctorant"));
         return new User(doctorant.getEmail(), doctorant.getPassword(), authorities);
 
         // Convert the Role to a GrantedAuthority
