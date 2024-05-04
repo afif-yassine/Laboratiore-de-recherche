@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser() {
-
-        return null;
+    public String authenticateUser() {
+        return "ok";
     }
 }
