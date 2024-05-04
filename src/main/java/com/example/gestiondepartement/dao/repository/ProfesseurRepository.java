@@ -14,5 +14,7 @@ public interface ProfesseurRepository extends JpaRepository<Professeur, Long> {
 
     List<Professeur> findByActiveFalse();
 
+    Professeur findByEmail(String email);
+
 
 }

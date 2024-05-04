@@ -18,6 +18,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,8 +28,33 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/api")) // Disable CSRF for /api
                 )
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // Register JWT filter
+
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .httpBasic(withDefaults());
         return http.build();
     }
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Bean
+    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() {
+        return new JwtAuthenticationTokenFilter(jwtTokenUtil);
+    }
+
+     @Bean
+     public PasswordEncoder passwordEncoder() {
+         return NoOpPasswordEncoder.getInstance(); // No longer recommend using this, even for plain text
+     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
 
 }

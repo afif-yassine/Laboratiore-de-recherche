@@ -1,8 +1,10 @@
 package com.example.gestiondepartement.service;
 
-
+import com.example.gestiondepartement.dao.Doctorant;
 import com.example.gestiondepartement.dao.Membre;
+import com.example.gestiondepartement.dao.repository.DoctorantRepository;
 import com.example.gestiondepartement.dao.repository.MemberRepository;
+import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,18 +21,33 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private MemberRepository membreRepository;
+    private DoctorantRepository doctorantRepository;
+
+    @Autowired
+    private ProfesseurRepository professeurRepository;
+
+;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Membre membre = membreRepository.findByEmail(email);
-        if (membre == null) {
+        Membre professeur = professeurRepository.findByEmail(email);
+        Membre doctorant = doctorantRepository.findByEmail(email);
+
+
+        if (professeur == null && doctorant == null ) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
-
-        // Convert the Role to a GrantedAuthority
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("Admin"));
 
-        return new User(membre.getEmail(), membre.getPassword(), authorities);
+        if(professeur != null )
+            return new User(professeur.getEmail(), professeur.getPassword(), authorities);
+
+
+        return new User(doctorant.getEmail(), doctorant.getPassword(), authorities);
+
+        // Convert the Role to a GrantedAuthority
+
     }
 }
+
