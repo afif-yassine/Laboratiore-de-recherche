@@ -21,6 +21,8 @@ public class Article {
 
     @Temporal(TemporalType.DATE)
     private Date publicationDate;
+    @ManyToOne
+    private Membre publisher;
 
     @ManyToMany
     @JoinTable(

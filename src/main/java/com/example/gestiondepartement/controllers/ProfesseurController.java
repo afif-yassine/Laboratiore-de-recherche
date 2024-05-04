@@ -43,6 +43,12 @@ public class ProfesseurController {
     public ProfesseurDTO getProfesseursById(@PathVariable("id") long id){
         return professeurService.getProfesseursById(id);
     }
+
+    @GetMapping("/DoctoransOfProfesseur/{id}")
+    public List<DoctorantDTO> DoctoransOfProfesseur(@PathVariable("id") long id){
+        return professeurService.DoctoransOfProfesseur(id);
+    }
+
     @GetMapping("/ProfesseursId2/{id}")
     public ProfesseurSearchDTO getProfesseursById2(@PathVariable("id") long id){
         return professeurService.getProfesseursSearchById(id);

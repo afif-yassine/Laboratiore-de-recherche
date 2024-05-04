@@ -1,5 +1,6 @@
 package com.example.gestiondepartement.rest;
 
+import com.example.gestiondepartement.dao.Membre;
 import lombok.Data;
 import lombok.Getter;
 
@@ -12,6 +13,9 @@ public class ArticleDTO {
     private String titre;
     private String description;
     private Date publicationDate;
+
+    private Long publisher;
+
     private Boolean isActive;
     // Assuming you want to only send basic member information like IDs or names
     private List<Long> authorIds;

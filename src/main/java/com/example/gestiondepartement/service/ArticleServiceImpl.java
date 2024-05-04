@@ -33,4 +33,10 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article>  articles = articleRepository.findByisActiveFalse();
         return articleMapper.articlesToArticleDTOs(articles);
     }
+
+    @Override
+    public List<ArticleDTO> NoActiveArticle() {
+        List<Article>  articles = articleRepository.findByisActiveFalse();
+        return articleMapper.articlesToArticleDTOs(articles);
+    }
 }

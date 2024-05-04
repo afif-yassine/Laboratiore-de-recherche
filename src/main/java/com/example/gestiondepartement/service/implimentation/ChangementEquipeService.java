@@ -1,5 +1,6 @@
 package com.example.gestiondepartement.service.implimentation;
 
+import com.example.gestiondepartement.dao.Article;
 import com.example.gestiondepartement.dao.ChangementEquipe;
 import com.example.gestiondepartement.rest.ChangementEquipeDTO;
 import com.example.gestiondepartement.rest.ChangementEquipeSearchDTO;
@@ -23,4 +24,5 @@ public interface ChangementEquipeService {
     List<ChangementEquipeDTO> getAllChangement();
 
     List<ChangementEquipeSearchDTO> getStatusFalse2();
+
 }

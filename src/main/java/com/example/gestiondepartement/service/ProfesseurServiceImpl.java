@@ -1,10 +1,13 @@
 package com.example.gestiondepartement.service;
 
 
+import com.example.gestiondepartement.dao.Doctorant;
+import com.example.gestiondepartement.dao.repository.DoctorantRepository;
 import com.example.gestiondepartement.dao.repository.EquipeRepository;
 import com.example.gestiondepartement.dao.Professeur;
 import com.example.gestiondepartement.dao.repository.InscriptiondoctorantRepository;
 import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
+import com.example.gestiondepartement.mappers.DoctorantMapper;
 import com.example.gestiondepartement.mappers.ProfesseurMapper;
 import com.example.gestiondepartement.mappers.ProfesseurSearchDTOMapper;
 import com.example.gestiondepartement.rest.DoctorantDTO;
@@ -27,10 +30,14 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     private EquipeRepository equipeRepository;
 
     @Autowired
+    private DoctorantRepository doctorantRepository;
+
+    @Autowired
     private ProfesseurSearchDTOMapper professeurSearchDTOMapper;
 
     @Autowired
     private InscriptiondoctorantService inscriptiondoctorantService;
+
 
 
     @Override
@@ -106,6 +113,13 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     public ProfesseurSearchDTO getProfesseursSearchById(long id) {
         Professeur professeur = professeurRepository.findById(id).get();
         return professeurSearchDTOMapper.toDto(professeur);
+    }
+
+    @Override
+    public List<DoctorantDTO> DoctoransOfProfesseur(long id) {
+        List<Doctorant> doctorants = doctorantRepository.findAllByEncadrant_IdOrCoEncadrant_IdAndActiveFalse(id,id);
+        return doctorants.stream().map(DoctorantMapper::toDoctorantDTO).toList();
+        //todo remétre to findAllByEncadrant_IdOrCoEncadrant_IdAndActiveTrue
     }
     /*------------------------------------Professeur--------------------------------------------------*/
 

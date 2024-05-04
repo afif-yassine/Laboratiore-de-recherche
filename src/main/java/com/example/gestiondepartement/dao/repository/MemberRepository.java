@@ -11,4 +11,5 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Membre, Long> {
     Membre findMembreById(Long id);
     @NotNull List<Membre> findAllById(Iterable<Long> ids);
+    Membre findByEmail(String email);
 }

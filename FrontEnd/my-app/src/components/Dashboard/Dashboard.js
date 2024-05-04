@@ -8,7 +8,9 @@ import DoctorantSignUpRequests from './Notifications/DoctorantSignUpRequests';
 import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
 import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
-import Articles from './Articles/Articles'; // Ensure the path is correct
+import Articles from './Articles/Articles';
+import chatComponent from "./Chat/ChatComponent";
+import FalseActiveArticles from "./Notifications/FalseActiveArticles"; // Ensure the path is correct
 //import CreateArticle from './Articles/CreateArticle'; // Path to the component that handles article creation
 //import AllArticles from './Articles/AllArticles'; // Path to the component that lists all articles
 
@@ -18,6 +20,7 @@ const Dashboard = () => {
     const [open, setOpen] = useState(false);
     const [articlesOpen, setArticlesOpen] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState('');
+
 
     const handleClick = (menu) => {
         if (menu === 'notifications') {
@@ -41,6 +44,8 @@ const Dashboard = () => {
                 return <Typography variant="body2">Announcements Content</Typography>;
             case 'Publications':
                 return <Typography variant="body2">Publications Content</Typography>;
+            case 'FalseActiveArticles':
+                return <FalseActiveArticles />;
             case 'DoctorantSignUpRequests':
                 return <DoctorantSignUpRequests />;
             case 'ProfesseurSignUpRequests':
@@ -89,6 +94,9 @@ const Dashboard = () => {
                             </ListItem>
                             <Collapse in={open} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('FalseActiveArticles')}>
+                                        <ListItemText primary="Article Notification" />
+                                    </ListItem>
                                     <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('DoctorantSignUpRequests')}>
                                         <ListItemText primary="Doctorant Sign-up Requests" />
                                     </ListItem>

@@ -1,6 +1,8 @@
 package com.example.gestiondepartement.controllers;
 
+import com.example.gestiondepartement.dao.Article;
 import com.example.gestiondepartement.rest.*;
+import com.example.gestiondepartement.service.implimentation.ArticleService;
 import com.example.gestiondepartement.service.implimentation.ChangementEquipeService;
 import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import com.example.gestiondepartement.service.implimentation.ProfesseurService;
@@ -20,6 +22,9 @@ public class AdminController {
 
     @Autowired
     private InscriptiondoctorantService inscriptiondoctorantService;
+
+    @Autowired
+    private ArticleService articleService;
 
     /*------------------------------------Notification-----------------------------------------------*/
 
@@ -41,6 +46,11 @@ public class AdminController {
     @GetMapping("/NoChangeEquipe2")
     public List<ChangementEquipeSearchDTO> getStatusFalse2(){
         return changementEquipeService.getStatusFalse2();
+    }
+
+    @GetMapping("/NoActiveArticle")
+    public List<ArticleDTO> NoActiveArticle(){
+        return articleService.NoActiveArticle();
     }
 
     @GetMapping("/NoValideDoctoran")
