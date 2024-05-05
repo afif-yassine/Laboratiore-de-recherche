@@ -17,7 +17,7 @@ public class JwtSecretKey {
         return secretKey;
     }
 
-    public  String generateJWT(String email, String role) {
+    public  String generateJWT(String email, String role, Long id) {
         // Retrieve your securely stored key (this example uses a hardcoded value, but you should retrieve it from a secure location)
         SecretKey key = getSecretKey(); // Use the centralized secret key
 
@@ -31,6 +31,7 @@ public class JwtSecretKey {
                 .setExpiration(expirationDate)
                 .signWith(key)
                 .claim("role", role) // Add role as a claim
+                .claim("id", id)
                 .compact();
 
         return jwt;
