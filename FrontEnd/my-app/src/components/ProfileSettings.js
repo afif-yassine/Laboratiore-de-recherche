@@ -34,7 +34,7 @@ const ProfesseurUpdateForm = ({ professorId }) => {
         }
 
         try {
-            const response = await axios.put('http://localhost:8080/professeur/updateInfo', updateData, {
+            const response = await axiosInstance.put('http://localhost:8080/professeur/updateInfo', updateData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

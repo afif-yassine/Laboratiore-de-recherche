@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import axiosInstance from "../../login/interceptor";
 
 const ProfesseurSignUpRequests = () => {
     const [professeurs, setProfesseurs] = useState([]);
@@ -9,13 +10,13 @@ const ProfesseurSignUpRequests = () => {
     const [currentProfesseur, setCurrentProfesseur] = useState({ id: null, action: '' });
 
     useEffect(() => {
-        axios.get('http://localhost:8080/admin/NoActiveProf')
+        axiosInstance.get('http://localhost:8080/admin/NoActiveProf')
             .then(response => {
                 const professeursData = response.data;
                 setProfesseurs(professeursData);
                 professeursData.forEach(prof => {
                     if (prof.idequipe) {
-                        axios.get(`http://localhost:8080/equipe/${prof.idequipe}`)
+                        axiosInstance.get(`http://localhost:8080/equipe/${prof.idequipe}`)
                             .then(resp => {
                                 setEquipes(prev => ({ ...prev, [prof.idequipe]: resp.data.nom }));
                             })
@@ -45,7 +46,7 @@ const ProfesseurSignUpRequests = () => {
     };
 
     const handleAcceptRequest = (id) => {
-        axios.put(`http://localhost:8080/admin/accepteProf/${id}`)
+        axiosInstance.put(`http://localhost:8080/admin/accepteProf/${id}`)
             .then(() => {
                 setProfesseurs(professeurs.filter(prof => prof.id !== id));
                 console.log(`Accepted professeur with ID: ${id}`);
@@ -54,7 +55,7 @@ const ProfesseurSignUpRequests = () => {
     };
 
     const handleRefuseRequest = (id) => {
-        axios.delete(`http://localhost:8080/admin/refuseProf/${id}`)
+        axiosInstance.delete(`http://localhost:8080/admin/refuseProf/${id}`)
             .then(() => {
                 setProfesseurs(professeurs.filter(prof => prof.id !== id));
                 console.log(`Refused professeur with ID: ${id}`);

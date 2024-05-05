@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, Button, Typography, TextField, Paper, Snackbar } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
+import axiosInstance from "../../login/interceptor";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -18,7 +19,7 @@ const Articles = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
     useEffect(() => {
-        axios.get('http://localhost:8080/professeur/all')
+        axiosInstance.get('http://localhost:8080/professeur/all')
             .then(response => setAuthors(response.data))
             .catch(error => console.error('Failed to fetch authors:', error));
     }, []);
@@ -32,7 +33,7 @@ const Articles = () => {
             authorIds: authorIds.map(author => author.id)
         };
 
-        axios.post('http://localhost:8080/Article/create', articleData)
+        axiosInstance.post('http://localhost:8080/Article/create', articleData)
             .then(response => {
                 setSnackbarMessage('Article created successfully!');
                 setSnackbarSeverity('success');

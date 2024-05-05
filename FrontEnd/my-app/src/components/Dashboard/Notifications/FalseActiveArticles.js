@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper } from '@mui/material';
+import axiosInstance from "../../login/interceptor";
 
 const FalseActiveArticles = () => {
     const [articles, setArticles] = useState([]);
@@ -8,7 +9,7 @@ const FalseActiveArticles = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/admin/NoActiveArticle')
+        axiosInstance.get('http://localhost:8080/admin/NoActiveArticle')
             .then(response => {
                 setArticles(response.data);
                 setLoading(false);

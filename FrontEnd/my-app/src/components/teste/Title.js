@@ -16,7 +16,7 @@ const ProfileSettings = ({ professorId = 60 }) => {
     const theme = useTheme();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
+        axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
             .then(response => {
                 setProfessorDetails(response.data);
                 setLoading(false);
@@ -89,6 +89,7 @@ import KeyIcon from '@mui/icons-material/Key';
 
 // Assuming theme is properly set up and exported in '../../../theme/theme'
 import theme from '../../../theme/theme';
+import axiosInstance from "../login/interceptor";
 
 const ProfileSettings = ({ professorId = 60 }) => {
     const [professorDetails, setProfessorDetails] = useState(null);
@@ -96,7 +97,7 @@ const ProfileSettings = ({ professorId = 60 }) => {
     const theme = useTheme();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
+        axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
             .then(response => {
                 setProfessorDetails(response.data);
                 setLoading(false);

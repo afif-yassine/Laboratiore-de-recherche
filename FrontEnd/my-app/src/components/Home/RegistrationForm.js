@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Container, TextField, Typography, CircularProgress, Grid, FormControl, FormControlLabel, Checkbox, FormLabel, Radio, RadioGroup, Select, MenuItem, InputLabel, Alert } from '@mui/material';import axios from 'axios';
+import axiosInstance from "../login/interceptor";
 
 const RegistrationForm = () => {
     const [submissionStatus, setSubmissionStatus] = useState({
@@ -27,7 +28,7 @@ const RegistrationForm = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:8080/equipe/all')
+        axiosInstance.get('http://localhost:8080/equipe/all')
             .then(response => {
                 setTeams(response.data);
                 setLoading(false);
@@ -40,7 +41,7 @@ const RegistrationForm = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:8080/professeur/all')
+        axiosInstance.get('http://localhost:8080/professeur/all')
             .then(response => {
                 const filteredProfs = response.data.filter(prof => prof.status === 'PES' || prof.status === 'PH');
                 setProfs(filteredProfs);
@@ -70,7 +71,7 @@ const RegistrationForm = () => {
             submissionData = { ...submissionData, idencadrant: formData.idencadrant, coEncadrant: formData.coEncadrant || null }; // Adjust as per your backend needs
         }
 
-        axios.post(url, submissionData)
+        axiosInstance.post(url, submissionData)
             .then(response => {
                 setLoading(false);
                 setSubmissionStatus({ submitted: true, error: false });

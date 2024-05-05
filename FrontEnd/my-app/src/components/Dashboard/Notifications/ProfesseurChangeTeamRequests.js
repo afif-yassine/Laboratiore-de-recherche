@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Box, Button, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import axiosInstance from "../../login/interceptor";
 
 const ProfesseurChangeTeamRequests = () => {
     const [changeRequests, setChangeRequests] = useState([]);
@@ -8,7 +9,7 @@ const ProfesseurChangeTeamRequests = () => {
     const [currentRequest, setCurrentRequest] = useState({ id: null, action: '' });
 
     useEffect(() => {
-        axios.get('http://localhost:8080/admin/NoChangeEquipe')
+        axiosInstance.get('http://localhost:8080/admin/NoChangeEquipe')
             .then(response => {
                 const requests = response.data.map(request => ({
                     ...request,
@@ -18,13 +19,13 @@ const ProfesseurChangeTeamRequests = () => {
                 setChangeRequests(requests);
 
                 requests.forEach(request => {
-                    axios.get(`http://localhost:8080/professeur/ProfesseursId/${request.profID}`)
+                    axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId/${request.profID}`)
                         .then(resp => {
                             setChangeRequests(currentRequests => currentRequests.map(cr => cr.id === request.id ? { ...cr, profName: `${resp.data.nom} ${resp.data.prenom}` } : cr));
                         })
                         .catch(error => console.error(`Failed to fetch professor ${request.profID}:`, error));
 
-                    axios.get(`http://localhost:8080/equipe/${request.newEquipe}`)
+                    axiosInstance.get(`http://localhost:8080/equipe/${request.newEquipe}`)
                         .then(resp => {
                             setChangeRequests(currentRequests => currentRequests.map(cr => cr.id === request.id ? { ...cr, equipeName: resp.data.nom } : cr));
                         })
@@ -53,7 +54,7 @@ const ProfesseurChangeTeamRequests = () => {
     };
 
     const handleAcceptRequest = (id) => {
-        axios.put(`http://localhost:8080/admin/accepteChangement/${id}`)
+        axiosInstance.put(`http://localhost:8080/admin/accepteChangement/${id}`)
             .then(() => {
                 setChangeRequests(changeRequests.filter(request => request.id !== id));
                 console.log(`Accepted change team request for Professeur ID: ${id}`);
@@ -62,7 +63,7 @@ const ProfesseurChangeTeamRequests = () => {
     };
 
     const handleRefuseRequest = (id) => {
-        axios.delete(`http://localhost:8080/admin/refuseChangement/${id}`)
+        axiosInstance.delete(`http://localhost:8080/admin/refuseChangement/${id}`)
             .then(() => {
                 setChangeRequests(changeRequests.filter(request => request.id !== id));
                 console.log(`Refused change team request for Professeur ID: ${id}`);

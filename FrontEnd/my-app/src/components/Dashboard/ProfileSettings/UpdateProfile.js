@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import axiosInstance from "../../login/interceptor";
 
 const UpdateProfile = ({ professorDetails, open, handleClose, refreshProfile }) => {
     const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const UpdateProfile = ({ professorDetails, open, handleClose, refreshProfile }) 
     };
 
     const handleUpdateProfile = () => {
-        axios.put('http://localhost:8080/professeur/updateInfo', formData)
+        axiosInstance.put('http://localhost:8080/professeur/updateInfo', formData)
             .then(response => {
                 console.log(response.data);
                 handleClose(); // Close dialog after update

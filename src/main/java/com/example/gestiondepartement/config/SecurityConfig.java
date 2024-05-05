@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,17 +26,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf
-                        .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/api")) // Disable CSRF for /api
-                        .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/professeur"))
-                        .requireCsrfProtectionMatcher(request -> !request.getServletPath().startsWith("/equipe"))
-                )
+                .csrf(AbstractHttpConfigurer::disable)
+                         // Disable CSRF for /api
+
+
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // Register JWT filter
 
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/professeur/all").permitAll()
-                        .requestMatchers("/equipe/all").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

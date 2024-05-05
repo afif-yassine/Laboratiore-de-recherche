@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import axiosInstance from "../../login/interceptor";
 
 const DoctorantSignUpRequests = () => {
     const [doctorants, setDoctorants] = useState([]);
@@ -10,13 +11,13 @@ const DoctorantSignUpRequests = () => {
     const [currentDoctorant, setCurrentDoctorant] = useState({id: null, action: ''}); // Store the ID and action ('accept' or 'refuse') of the current doctorant
 
     useEffect(() => {
-        axios.get('http://localhost:8080/admin/NoValideDoctoran')
+        axiosInstance.get('http://localhost:8080/admin/NoValideDoctoran')
             .then(response => {
                 const doctorantsData = response.data;
                 setDoctorants(doctorantsData);
                 doctorantsData.forEach(doc => {
                     if (doc.idencadrant) {
-                        axios.get(`http://localhost:8080/professeur/ProfesseursId/${doc.idencadrant}`)
+                        axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId/${doc.idencadrant}`)
                             .then(resp => {
                                 setEncadrants(prev => ({ ...prev, [doc.idencadrant]: `${resp.data.nom} ${resp.data.prenom}` }));
                             })
@@ -46,7 +47,7 @@ const DoctorantSignUpRequests = () => {
     };
 
     const handleAcceptRequest = (id) => {
-        axios.put(`http://localhost:8080/admin/accepteDoctorant/${id}`)
+        axiosInstance.put(`http://localhost:8080/admin/accepteDoctorant/${id}`)
             .then(() => {
                 setDoctorants(doctorants.filter(doc => doc.id !== id));
                 console.log(`Accepted doctorant with ID: ${id}`);
@@ -55,7 +56,7 @@ const DoctorantSignUpRequests = () => {
     };
 
     const handleRefuseRequest = (id) => {
-        axios.delete(`http://localhost:8080/admin/refuseDoctorant/${id}`)
+        axiosInstance.delete(`http://localhost:8080/admin/refuseDoctorant/${id}`)
             .then(() => {
                 setDoctorants(doctorants.filter(doc => doc.id !== id));
                 console.log(`Refused doctorant with ID: ${id}`);

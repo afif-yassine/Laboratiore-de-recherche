@@ -20,6 +20,7 @@ import UpdateProfile from './UpdateProfile'; // Make sure to import the UpdatePr
 
 // Assuming theme is configured in your project
 import theme from '../../../theme/theme';
+import axiosInstance from "../../login/interceptor";
 
 
 const ProfileProfSettings = ({ professorId = 60 }) => {
@@ -35,7 +36,7 @@ const ProfileProfSettings = ({ professorId = 60 }) => {
 
     const fetchProfessorDetails = () => {
         setLoading(true);
-        axios.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
+        axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId2/${professorId}`)
             .then(response => {
                 setProfessorDetails(response.data);
                 setLoading(false);

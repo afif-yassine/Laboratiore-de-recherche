@@ -3,6 +3,7 @@ import { Container, Typography, Grid, Box, CircularProgress, useTheme } from '@m
 import axios from 'axios';
 import ProfessorsList from '../entity/ProfessorsList';
 import TeamMemberCard from '../entity/TeamMemberCard';
+import axiosInstance from "../login/interceptor";
 
 const TeamPage = () => {
     const theme = useTheme();
@@ -13,7 +14,7 @@ const TeamPage = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:8080/equipe/all')
+        axiosInstance.get('http://localhost:8080/equipe/all')
             .then(response => {
                 setTeams(response.data);
                 setLoading(false);
@@ -27,7 +28,7 @@ const TeamPage = () => {
     const handleTeamClick = (id) => {
         setSelectedTeamId(id);
         // Fetch professors for the selected team
-        axios.get(`http://localhost:8080/professeur/equipe/${id}`)
+        axiosInstance.get(`http://localhost:8080/professeur/equipe/${id}`)
             .then(response => {
                 setProfessors(response.data);
             })

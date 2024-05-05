@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Paper, Typography, FormControl, InputLabel, Select, MenuItem, Button, Box, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import axiosInstance from "../../login/interceptor";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -15,7 +16,7 @@ const ChangeTeamRequest = ({ profID = 58 }) => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
     useEffect(() => {
-        axios.get('http://localhost:8080/equipe/all')
+        axiosInstance.get('http://localhost:8080/equipe/all')
             .then(response => setEquipes(response.data))
             .catch(error => console.error('Failed to fetch equipes:', error));
     }, []);
@@ -30,7 +31,7 @@ const ChangeTeamRequest = ({ profID = 58 }) => {
             return;
         }
 
-        axios.post('http://localhost:8080/ChangeEquipe/CreateChangement', { profID, newEquipe })
+        axiosInstance.post('http://localhost:8080/ChangeEquipe/CreateChangement', { profID, newEquipe })
             .then(response => {
                 setSnackbarMessage('Request to change team has been submitted successfully.');
                 setSnackbarSeverity('success');

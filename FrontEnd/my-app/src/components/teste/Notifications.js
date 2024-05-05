@@ -14,13 +14,13 @@ const Notifications = ({ selectedNotification}) => {
 
     useEffect(() => {
         // Fetch Doctorant sign-up requests and their encadrants
-        axios.get('http://localhost:8080/admin/NoValideDoctoran')
+        axiosInstance.get('http://localhost:8080/admin/NoValideDoctoran')
             .then(response => {
                 const doctorantsData = response.data;
                 setDoctorants(doctorantsData);
                 doctorantsData.forEach(doc => {
                     if (doc.idencadrant) {
-                        axios.get(`http://localhost:8080/professeur/ProfesseursId/${doc.idencadrant}`)
+                        axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId/${doc.idencadrant}`)
                             .then(resp => {
                                 setEncadrants(prev => ({ ...prev, [doc.idencadrant]: `${resp.data.nom} ${resp.data.prenom}` }));
                             })
@@ -31,13 +31,13 @@ const Notifications = ({ selectedNotification}) => {
             .catch(error => console.error('Failed to fetch doctorants:', error));
 
         // Fetch Professeur sign-up requests and their equipes
-        axios.get('http://localhost:8080/admin/NoActiveProf')
+        axiosInstance.get('http://localhost:8080/admin/NoActiveProf')
             .then(response => {
                 const professeursData = response.data;
                 setProfesseurs(professeursData);
                 professeursData.forEach(prof => {
                     if (prof.idequipe) {
-                        axios.get(`http://localhost:8080/equipe/${prof.idequipe}`)
+                        axiosInstance.get(`http://localhost:8080/equipe/${prof.idequipe}`)
                             .then(resp => {
                                 setEquipes(prev => ({ ...prev, [prof.idequipe]: resp.data.nom }));
                             })
@@ -48,11 +48,11 @@ const Notifications = ({ selectedNotification}) => {
             .catch(error => console.error('Failed to fetch professeurs:', error));
 
         // Fetch Professeur change team requests
-        axios.get('http://localhost:8080/admin/NoChangeEquipe')
+        axiosInstance.get('http://localhost:8080/admin/NoChangeEquipe')
             .then(response => {
                 setChangementEquipes(response.data);
                 response.data.forEach(change => {
-                    axios.get(`http://localhost:8080/professeur/ProfesseursId/${change.profID}`)
+                    axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId/${change.profID}`)
                         .then(resp => {
                             setChangementEquipes(prev => prev.map(item => {
                                 if (item.id === change.id) {
@@ -63,7 +63,7 @@ const Notifications = ({ selectedNotification}) => {
                         })
                         .catch(error => console.error(`Failed to fetch professor ${change.profID}:`, error));
 
-                    axios.get(`http://localhost:8080/equipe/${change.newEquipe}`)
+                    axiosInstance.get(`http://localhost:8080/equipe/${change.newEquipe}`)
                         .then(resp => {
                             setChangementEquipes(prev => prev.map(item => {
                                 if (item.id === change.id) {
@@ -102,7 +102,7 @@ const Notifications = ({ selectedNotification}) => {
             // Implement accept request logic
             switch (selectedNotification) {
                 case 'Doctorant Sign-up Requests':
-                    axios.put(`http://localhost:8080/admin/accepteDoctorant/${selectedRequestId}`)
+                    axiosInstance.put(`http://localhost:8080/admin/accepteDoctorant/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Doctorant request accepted successfully');
@@ -117,7 +117,7 @@ const Notifications = ({ selectedNotification}) => {
                         });
                     break;
                 case 'Professeur Sign-up Requests':
-                    axios.put(`http://localhost:8080/admin/accepteProf/${selectedRequestId}`)
+                    axiosInstance.put(`http://localhost:8080/admin/accepteProf/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Professeur request accepted successfully');
@@ -132,7 +132,7 @@ const Notifications = ({ selectedNotification}) => {
                         });
                     break;
                 case 'Professeur Change Team Requests':
-                    axios.put(`http://localhost:8080/admin/accepteChangement/${selectedRequestId}`)
+                    axiosInstance.put(`http://localhost:8080/admin/accepteChangement/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Professeur change team request accepted successfully');
@@ -153,7 +153,7 @@ const Notifications = ({ selectedNotification}) => {
             // Implement refuse request logic
             switch (selectedNotification) {
                 case 'Doctorant Sign-up Requests':
-                    axios.delete(`http://localhost:8080/admin/refuseDoctorant/${selectedRequestId}`)
+                    axiosInstance.delete(`http://localhost:8080/admin/refuseDoctorant/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Doctorant request refused successfully');
@@ -168,7 +168,7 @@ const Notifications = ({ selectedNotification}) => {
                         });
                     break;
                 case 'Professeur Sign-up Requests':
-                    axios.delete(`http://localhost:8080/admin/refuseProf/${selectedRequestId}`)
+                    axiosInstance.delete(`http://localhost:8080/admin/refuseProf/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Professeur request refused successfully');
@@ -183,7 +183,7 @@ const Notifications = ({ selectedNotification}) => {
                         });
                     break;
                 case 'Professeur Change Team Requests':
-                    axios.delete(`http://localhost:8080/admin/refuseChangement/${selectedRequestId}`)
+                    axiosInstance.delete(`http://localhost:8080/admin/refuseChangement/${selectedRequestId}`)
                         .then(response => {
                             // Handle success
                             console.log('Professeur change team request refused successfully');

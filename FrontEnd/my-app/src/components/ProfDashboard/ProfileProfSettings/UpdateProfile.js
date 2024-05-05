@@ -33,7 +33,7 @@ const UpdateProfile = ({ professorDetails, open, handleClose, refreshProfile }) 
     };
 
     const handleUpdateProfile = () => {
-        axios.put('http://localhost:8080/professeur/updateInfo', formData)
+        axiosInstance.put('http://localhost:8080/professeur/updateInfo', formData)
             .then(response => {
                 console.log(response.data);
                 handleClose(); // Close dialog after update

@@ -13,12 +13,13 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import axiosInstance from "../login/interceptor";
 
 const AboutUs = () => {
     const [equipes, setEquipes] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/equipe/all')
+        axiosInstance.get('http://localhost:8080/equipe/all')
             .then((response) => {
                 setEquipes(response.data);
             })
