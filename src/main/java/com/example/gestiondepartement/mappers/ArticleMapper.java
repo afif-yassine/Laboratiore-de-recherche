@@ -16,9 +16,15 @@ import java.util.stream.Collectors;
 public interface ArticleMapper {
 
     @Mapping(target = "authorIds", source = "authors", qualifiedByName = "authorsToIds")
+    @Mapping(target = "publisher", source = "publisher.id")
+    @Mapping(target = "doi", source = "doi")
+    @Mapping(target = "pdfUrl", ignore = true)
     ArticleDTO articleToArticleDTO(Article article);
 
     @Mapping(target = "authors", source = "authorIds", qualifiedByName = "idsToAuthors")
+    @Mapping(target = "publisher", source = "publisher", qualifiedByName = "idToPublisher")
+    @Mapping(target = "doi", source = "doi")
+    @Mapping(target = "pdf", ignore = true)
     Article articleDTOToArticle(ArticleDTO articleDTO, @Context MemberRepository memberRepository);
 
     List<ArticleDTO> articlesToArticleDTOs(List<Article> articles);
@@ -39,5 +45,13 @@ public interface ArticleMapper {
             return null;
         }
         return memberRepository.findAllById(authorIds);
+    }
+
+    @Named("idToPublisher")
+    static Membre idToPublisher(Long publisherId, @Context MemberRepository memberRepository) {
+        if (publisherId == null) {
+            return null;
+        }
+        return memberRepository.findById(publisherId).orElse(null);
     }
 }

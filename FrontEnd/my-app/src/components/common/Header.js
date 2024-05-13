@@ -73,7 +73,7 @@ const Header = () => {
         { title: 'Actualité', path: '/news' },
         { title: 'Membre/equipe', path: '/team' },
         { title: 'Contact Us', path: '/contact' },
-        { title: 'Production Scientifique', path: '/research' },
+        { title: 'Production Scientifique', path: '/productionScientifique' },
     ];
 
     return (
@@ -88,9 +88,7 @@ const Header = () => {
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: 'center' }}>
                         {navigationItems.map((item) => (
                             <StyledRouterLink to={item.path} key={item.title}>
-                                <NavigationButton>
-                                    {item.title}
-                                </NavigationButton>
+                                <NavigationButton>{item.title}</NavigationButton>
                             </StyledRouterLink>
                         ))}
                     </Box>

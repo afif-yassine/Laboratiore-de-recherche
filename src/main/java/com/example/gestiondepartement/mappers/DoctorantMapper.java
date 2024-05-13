@@ -13,6 +13,7 @@ public class DoctorantMapper {
         doctorantDTO.setNumero(doctorant.getNumero());
         doctorantDTO.setActive(doctorant.isActive());
         doctorantDTO.setPassword(doctorant.getPassword());
+        doctorantDTO.setChatpassword(doctorant.getChatpassword());
         if(doctorant.getEncadrant() != null)
             doctorantDTO.setIdencadrant(doctorant.getEncadrant().getId());
         if(doctorant.getCoEncadrant() != null)
@@ -29,6 +30,7 @@ public class DoctorantMapper {
         doctorant.setNumero(doctorantDTO.getNumero());
         doctorant.setActive(doctorantDTO.isActive());
         doctorant.setPassword(doctorantDTO.getPassword());
+        doctorant.setChatpassword(doctorantDTO.getChatpassword());
         return doctorant;
     }
 }

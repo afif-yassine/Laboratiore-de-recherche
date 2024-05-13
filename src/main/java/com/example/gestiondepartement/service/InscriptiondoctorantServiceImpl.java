@@ -48,13 +48,13 @@ public class InscriptiondoctorantServiceImpl implements InscriptiondoctorantServ
 
     @Override
     public List<DoctorantDTO> getFalseValideAdminDoctoran() {
-        List<Doctorant> Doctorants = inscriptionDoctorantRepository.findByValideadminFalseAndValideprofTrue().stream().map(InscriptionDoctorant::getDoctorant).toList();
+        List<Doctorant> Doctorants = inscriptionDoctorantRepository.findByValideadminFalseAndValideprofFalse().stream().map(InscriptionDoctorant::getDoctorant).toList();
         return Doctorants.stream().map(DoctorantMapper::toDoctorantDTO).toList();
     }
 
     @Override
     public List<DoctorantSearchDTO> getFalseValideAdminDoctoran2() {
-        List<Doctorant> Doctorants = inscriptionDoctorantRepository.findByValideadminFalseAndValideprofTrue().stream().map(InscriptionDoctorant::getDoctorant).toList();
+        List<Doctorant> Doctorants = inscriptionDoctorantRepository.findByValideadminFalseAndValideprofFalse().stream().map(InscriptionDoctorant::getDoctorant).toList();
         return Doctorants.stream().map(doctorantSearchDTOMapper::toDto).toList();
     }
 

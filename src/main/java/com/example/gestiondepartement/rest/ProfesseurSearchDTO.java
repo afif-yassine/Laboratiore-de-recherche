@@ -1,6 +1,8 @@
 package com.example.gestiondepartement.rest;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -10,6 +12,9 @@ public class ProfesseurSearchDTO  {
 
     private String nom ;
 
+    @Getter
+    @Setter
+    private String chatpassword;
     private String prenom ;
     private String email ;
     private String numero ;

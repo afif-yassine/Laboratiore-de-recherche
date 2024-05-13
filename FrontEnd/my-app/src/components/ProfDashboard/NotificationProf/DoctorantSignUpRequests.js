@@ -1,10 +1,26 @@
-// src/components/Dashboard/Notifications/DoctorantSignUpRequests.js
+// src/components/DoctorantDashboard/Notifications/DoctorantSignUpRequests.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
 
-const DoctorantSignUpRequests = ({ idProfesseur = 74 }) => {
+function getID() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.id
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+    }
+}
+
+const DoctorantSignUpRequests = ({ idProfesseur = getID() }) => {
     const [doctorants, setDoctorants] = useState([]);
     const [encadrants, setEncadrants] = useState({});
     const [openDialog, setOpenDialog] = useState(false);

@@ -5,7 +5,6 @@ import com.example.gestiondepartement.dao.Doctorant;
 import com.example.gestiondepartement.dao.repository.DoctorantRepository;
 import com.example.gestiondepartement.dao.repository.EquipeRepository;
 import com.example.gestiondepartement.dao.Professeur;
-import com.example.gestiondepartement.dao.repository.InscriptiondoctorantRepository;
 import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
 import com.example.gestiondepartement.mappers.DoctorantMapper;
 import com.example.gestiondepartement.mappers.ProfesseurMapper;
@@ -16,9 +15,16 @@ import com.example.gestiondepartement.rest.ProfesseurSearchDTO;
 import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import com.example.gestiondepartement.service.implimentation.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ProfesseurServiceImpl implements ProfesseurService {
@@ -39,6 +45,35 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     private InscriptiondoctorantService inscriptiondoctorantService;
 
 
+    private void registerWithChatEngine(ProfesseurDTO professeurDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("PRIVATE-KEY", "cb2081bb-862b-47c2-a9ba-9e6c966dff84");
+
+        String requestBody = String.format("""
+        {
+            "username": "%s",
+            "first_name": "%s",
+            "last_name": "%s",
+            "secret": "%s"
+        }""", professeurDTO.getNom(), professeurDTO.getPrenom(), professeurDTO.getNom(), professeurDTO.getChatpassword());
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("https://api.chatengine.io/users/", entity, String.class);
+        // Optionally handle the response
+        System.out.println("ChatEngine response: " + response.getBody());
+    }
+
+    private String generateRandomPassword(int length) {
+        String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
+        Random random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append(charSet.charAt(random.nextInt(charSet.length())));
+        }
+        return sb.toString();
+    }
 
     @Override
     public void deletProfesseur(Long membreid) {
@@ -49,6 +84,10 @@ public class ProfesseurServiceImpl implements ProfesseurService {
 
     @Override
     public ProfesseurDTO saveProfesseur(ProfesseurDTO professeurDTO) {
+
+        professeurDTO.setChatpassword(generateRandomPassword(6));  // Example: generate a 10-character password
+
+        registerWithChatEngine(professeurDTO);
 
         Professeur professeur1 = ProfesseurMapper.toProfesseur(professeurDTO);
         professeur1.setEquipe(equipeRepository.findById(professeurDTO.getIdequipe()).get());
@@ -120,6 +159,12 @@ public class ProfesseurServiceImpl implements ProfesseurService {
         List<Doctorant> doctorants = doctorantRepository.findAllByEncadrant_IdOrCoEncadrant_IdAndActiveFalse(id,id);
         return doctorants.stream().map(DoctorantMapper::toDoctorantDTO).toList();
         //todo remétre to findAllByEncadrant_IdOrCoEncadrant_IdAndActiveTrue
+    }
+
+    @Override
+    public List<ProfesseurDTO> getBureau() {
+        List<Professeur> professeurs = professeurRepository.findAllByIsadminTrueAndIschefTrue();
+        return professeurs.stream().map(ProfesseurMapper::toProfesseurDTO).toList();
     }
     /*------------------------------------Professeur--------------------------------------------------*/
 

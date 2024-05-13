@@ -48,7 +48,7 @@ public class AdminController {
         return changementEquipeService.getStatusFalse2();
     }
 
-    @GetMapping("/NoActiveArticle")
+    @GetMapping("/allArticle")
     public List<ArticleDTO> NoActiveArticle(){
         return articleService.NoActiveArticle();
     }

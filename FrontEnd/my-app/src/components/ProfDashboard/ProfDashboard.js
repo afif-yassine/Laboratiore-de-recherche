@@ -1,6 +1,27 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem,ListItemIcon, ListItemText, Typography, Collapse } from '@mui/material';
-import {AddSharp, Article, CalendarViewDaySharp, ExpandLess, ExpandMore, LibraryBooks} from '@mui/icons-material';
+import {
+    Box,
+    CssBaseline,
+    Drawer,
+    AppBar,
+    Toolbar,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+    Collapse,
+    Button
+} from '@mui/material';
+import {
+    AddSharp,
+    Article,
+    CalendarViewDaySharp,
+    ExitToApp,
+    ExpandLess,
+    ExpandMore,
+    LibraryBooks
+} from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ForumIcon from '@mui/icons-material/Forum';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -9,10 +30,12 @@ import PublishIcon from '@mui/icons-material/Publish';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme/theme';
 import Articles from './Articles/Articles';
+import Chat from "./Chat/Chat";
 
 // Import notification sub-components
 import DoctorantSignUpRequests from './NotificationProf/DoctorantSignUpRequests';
 import ProfileProfSettings from "./ProfileProfSettings/ProfileProfSettings";
+import HandleLogout from "../login/Logout";
 
 
 const drawerWidth = 240;
@@ -37,7 +60,7 @@ const ProfDashboard = () => {
     const renderComponent = () => {
         switch (selectedComponent) {
             case 'Discussion':
-                return <Typography variant="body2">Discussion Content</Typography>;
+                return <Chat/>;
             case 'ProfileSettings':
                 return <ProfileProfSettings />;
             case 'Announcements':
@@ -52,6 +75,8 @@ const ProfDashboard = () => {
                 return <Typography variant="body2">Announcements Content</Typography>;
             case 'MyArticles':
                 return <Typography variant="body2">Announcements Content</Typography>;
+            case 'Logout':
+                return <HandleLogout/>;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -133,6 +158,16 @@ const ProfDashboard = () => {
                                     </ListItem>
                                 </List>
                             </Collapse>
+                            <ListItem>
+                                <Button
+                                    fullWidth
+                                    startIcon={<ExitToApp />}
+                                    onClick={() => handleMenuItemClick('Logout')}
+                                    sx={{ color: 'white', backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
+                                >
+                                    Log Out
+                                </Button>
+                            </ListItem>
                         </List>
                     </Box>
                 </Drawer>

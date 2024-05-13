@@ -112,6 +112,10 @@ const Notifications = ({ selectedNotification}) => {
                             setOpenConfirmation(false);
                         })
                         .catch(error => {
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             // Handle error
                             console.error('Failed to accept doctorant request:', error);
                         });
@@ -127,6 +131,10 @@ const Notifications = ({ selectedNotification}) => {
                             setOpenConfirmation(false);
                         })
                         .catch(error => {
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             // Handle error
                             console.error('Failed to accept professeur request:', error);
                         });
@@ -143,6 +151,10 @@ const Notifications = ({ selectedNotification}) => {
                         })
                         .catch(error => {
                             // Handle error
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             console.error('Failed to accept professeur change team request:', error);
                         });
                     break;
@@ -164,6 +176,10 @@ const Notifications = ({ selectedNotification}) => {
                         })
                         .catch(error => {
                             // Handle error
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             console.error('Failed to refuse doctorant request:', error);
                         });
                     break;
@@ -179,6 +195,10 @@ const Notifications = ({ selectedNotification}) => {
                         })
                         .catch(error => {
                             // Handle error
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             console.error('Failed to refuse professeur request:', error);
                         });
                     break;
@@ -194,6 +214,10 @@ const Notifications = ({ selectedNotification}) => {
                         })
                         .catch(error => {
                             // Handle error
+                            if (error.response && error.response.status === 401) {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }
                             console.error('Failed to refuse professeur change team request:', error);
                         });
                     break;

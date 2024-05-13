@@ -2,6 +2,7 @@ package com.example.gestiondepartement.controllers;
 
 
 import com.example.gestiondepartement.rest.DoctorantDTO;
+import com.example.gestiondepartement.rest.EquipeDTO;
 import com.example.gestiondepartement.rest.ProfesseurDTO;
 import com.example.gestiondepartement.service.implimentation.DoctorantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,13 @@ public class DoctorantControlleur {
     public ProfesseurDTO getEncadrantDeDoctorant(@PathVariable("id")Long id){
     return doctorantService.getEncadrantDeDoctorant(id);
     }
+
+    @GetMapping("/{id}")
+    public DoctorantDTO getDoctorantById(@PathVariable("id")Long id){
+        return doctorantService.getDoctorantById(id);
+    }
+
+
+
 
 }

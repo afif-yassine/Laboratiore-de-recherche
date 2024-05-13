@@ -38,6 +38,20 @@ export default function SignIn() {
             return false;
         }
     }
+    function isDoctorant() {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
+
+        try {
+
+            const decoded = jwtDecode(token);
+            console.log(decoded);
+            return decoded.role && decoded.role.includes('Doctorant');
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return false;
+        }
+    }
     function isProfesseur() {
         const token = localStorage.getItem('token');
         if (!token) return false;
@@ -82,6 +96,8 @@ export default function SignIn() {
                 window.location.href = '/profDashboard';
             if(isChef())
                 window.location.href = '/profDashboard';
+            if(isDoctorant())
+                window.location.href = '/doctorantDashboard';
 
         } catch (error) {
             console.error("Login failed:", error);

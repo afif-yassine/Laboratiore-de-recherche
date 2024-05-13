@@ -1,12 +1,18 @@
 package com.example.gestiondepartement.rest;
 
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ProfesseurDTO {
 
     private Long id;
 
     private String nom ;
+
+    @Getter
+    @Setter
+    private String chatpassword;
 
     private String prenom ;
     private String email ;
@@ -37,8 +43,6 @@ public class ProfesseurDTO {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-
 
     public String getStatus() {
         return status;

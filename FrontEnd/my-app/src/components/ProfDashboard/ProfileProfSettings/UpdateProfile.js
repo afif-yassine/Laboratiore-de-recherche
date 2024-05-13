@@ -1,74 +1,118 @@
-// ./ProfileSettings/UpdateProfile.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+    Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+} from '@mui/material';
 
-const UpdateProfile = ({ professorDetails, open, handleClose, refreshProfile }) => {
+
+function UpdateProfile({ open, handleClose, doctorant, refreshDoctorant }) {
+    // Initialize form data with the doctorant's current information
     const [formData, setFormData] = useState({
-        id: '',
-        nom: '',
-        prenom: '',
-        email: '',
-        numero: '',
-        status: '',
-        isadmin: false,
-        ischef: false,
-        idequipe: null,
-        active: true,
-        password: '',
+        id: doctorant.id,
+        nom: doctorant.nom,
+        prenom: doctorant.prenom,
+        email: doctorant.email,
+        numero: doctorant.numero,
+        password: doctorant.password,
+        idencadrant: doctorant.idencadrant,
+        coEncadrant: doctorant.coEncadrant
     });
 
-    useEffect(() => {
-        if (professorDetails) {
-            setFormData({
-                ...professorDetails, // Populate with current professor details
-                idequipe: professorDetails.equipe?.id,
-            });
-        }
-    }, [professorDetails, open]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    // Handle changes in text fields
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
-    const handleUpdateProfile = () => {
-        axiosInstance.put('http://localhost:8080/professeur/updateInfo', formData)
-            .then(response => {
-                console.log(response.data);
-                handleClose(); // Close dialog after update
-                refreshProfile(); // Refresh the displayed profile details
-            })
-            .catch(error => console.error('Failed to update profile:', error));
+    // Handle form submission
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            // Send PUT request to the server with the updated data
+            const response = await axios.put('http://localhost:8080/doctorant/update', formData);
+            if (response.status === 200) {
+                // Optionally refresh the doctorant's data in the parent component
+                refreshDoctorant();
+                // Close the dialog on successful update
+                handleClose();
+            }
+        } catch (error) {
+            console.error('Failed to update doctorant:', error);
+        }
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Update Profile</DialogTitle>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Update Doctorant Profile</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    To update your profile, please edit the information below.
+                    Please update the doctorant information below.
                 </DialogContentText>
-                <TextField autoFocus margin="dense" name="nom" label="Nom" fullWidth variant="outlined" value={formData.nom} onChange={handleChange} />
-                <TextField margin="dense" name="prenom" label="Prénom" fullWidth variant="outlined" value={formData.prenom} onChange={handleChange} />
-                <TextField margin="dense" name="email" label="Email" fullWidth variant="outlined" value={formData.email} onChange={handleChange} />
-                <TextField margin="dense" name="numero" label="Numéro" fullWidth variant="outlined" value={formData.numero} onChange={handleChange} />
-                <FormControl fullWidth margin="dense">
-                    <InputLabel>Status</InputLabel>
-                    <Select name="status" label="Status" value={formData.status} onChange={handleChange}>
-                        <MenuItem value="PA">Professeur Assistant (PA)</MenuItem>
-                        <MenuItem value="PH">Professeur Habilité (PH)</MenuItem>
-                        <MenuItem value="PES">Professeur de l'Enseignement Supérieur (PES)</MenuItem>
-                    </Select>
-                </FormControl>
-                <TextField margin="dense" name="password" label="Password" fullWidth variant="outlined" type="text" value={formData.password} onChange={handleChange} />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    name="nom"
+                    label="Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    value={formData.nom}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="prenom"
+                    label="Surname"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    value={formData.prenom}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="email"
+                    label="Email"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                    value={formData.email}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="numero"
+                    label="Phone Number"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    value={formData.numero}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    fullWidth
+                    variant="standard"
+                    value={formData.password}
+                    onChange={handleChange}
+                />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleUpdateProfile}>OK</Button>
+                <Button onClick={handleClose} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={handleSubmit} color="primary">
+                    Update
+                </Button>
             </DialogActions>
         </Dialog>
     );
-};
+}
 
 export default UpdateProfile;

@@ -2,11 +2,16 @@ package com.example.gestiondepartement.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Article")
+@Getter
+@Setter
+@Table(name = "article")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,62 +26,25 @@ public class Article {
 
     @Temporal(TemporalType.DATE)
     private Date publicationDate;
+
+    // DOI field
+    @Column(name = "doi", unique = true)
+    private String doi;
+
+    // PDF field as a byte array
+    @Lob  // Specifies that the database should treat this as a Large Object
+    @Column(name = "pdf")
+    private byte[] pdf;
+
     @ManyToOne
+    @JoinColumn(name = "publisher_id") // Ensures that the foreign key column name matches what is in the database
     private Membre publisher;
 
     @ManyToMany
     @JoinTable(
-            name = "article_authors", // Corrected table name for clarity and correctness
-            joinColumns = @JoinColumn(name = "article_id"), // Specifies the column used for joining with the Article table
-            inverseJoinColumns = @JoinColumn(name = "membre_id") // Specifies the column used for joining with the Membre table
+            name = "article_authors",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "membre_id")
     )
     private List<Membre> authors;
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitre() {
-        return titre;
-    }
-
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public List<Membre> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<Membre> authors) {
-        this.authors = authors;
-    }
 }

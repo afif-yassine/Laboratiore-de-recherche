@@ -2,6 +2,8 @@ package com.example.gestiondepartement.dao;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Membre")
@@ -12,6 +14,12 @@ public abstract class Membre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+
+    @Getter
+    @Setter
+    private String chatpassword;
 
 
     @Column(name = "isactive")
@@ -85,4 +93,6 @@ public abstract class Membre {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }

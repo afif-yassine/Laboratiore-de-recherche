@@ -1,4 +1,4 @@
-// ./ProfileSettings/UpdateProfile.js
+// ./ProfileDoctorantSettings/UpdateProfile.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material';

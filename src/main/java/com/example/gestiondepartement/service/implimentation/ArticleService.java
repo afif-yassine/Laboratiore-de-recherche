@@ -13,4 +13,10 @@ public interface ArticleService {
     List<ArticleDTO> AllArticleNoValide();
 
     List<ArticleDTO> NoActiveArticle();
+
+    List<ArticleDTO> MesArticles(Long id);
+
+    List<ArticleDTO> AllArticlesOfDashProf();
+
+    ArticleDTO updateArticle(ArticleDTO articleDTO);
 }

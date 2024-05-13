@@ -20,6 +20,10 @@ const TeamPage = () => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error("Error fetching teams data:", error);
                 setLoading(false);
             });
@@ -33,6 +37,10 @@ const TeamPage = () => {
                 setProfessors(response.data);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error("Error fetching professors data:", error);
             });
     };

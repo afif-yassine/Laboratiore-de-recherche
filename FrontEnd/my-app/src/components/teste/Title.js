@@ -22,6 +22,10 @@ const ProfileSettings = ({ professorId = 60 }) => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Error fetching professor details:', error);
                 setLoading(false);
             });
@@ -103,6 +107,10 @@ const ProfileSettings = ({ professorId = 60 }) => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Error fetching professor details:', error);
                 setLoading(false);
             });

@@ -2,6 +2,8 @@ package com.example.gestiondepartement.rest;
 
 import com.example.gestiondepartement.dao.Professeur;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 public class DoctorantDTO {
 
@@ -9,6 +11,9 @@ public class DoctorantDTO {
 
     private String nom ;
 
+    @Getter
+    @Setter
+    private String chatpassword;
     private String prenom ;
     private String email ;
     private String numero ;

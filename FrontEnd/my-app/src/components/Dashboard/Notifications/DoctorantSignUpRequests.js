@@ -1,4 +1,4 @@
-// src/components/Dashboard/Notifications/DoctorantSignUpRequests.js
+// src/components/DoctorantDashboard/Notifications/DoctorantSignUpRequests.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItem, ListItemText, Typography, Paper, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';

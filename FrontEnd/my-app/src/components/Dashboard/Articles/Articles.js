@@ -4,10 +4,27 @@ import { Box, Button, Typography, TextField, Paper, Snackbar, List, ListItem, Li
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+function getID() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.id
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+    }
+}
 
 const Articles = () => {
     const [title, setTitle] = useState('');
@@ -16,6 +33,8 @@ const Articles = () => {
     const [doctorantIds, setDoctorantIds] = useState([]);
     const [professeurs, setProfesseurs] = useState([]);
     const [doctorants, setDoctorants] = useState([]);
+    const [publisher, setPublisher] = useState(null);
+
     const [isActive, setIsActive] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -47,7 +66,8 @@ const Articles = () => {
             description: content,
             publicationDate: new Date(),
             authorIds: [...professeurIds.map(prof => prof.id), ...doctorantIds.map(doc => doc.id)],
-            isActive: isActive
+            isActive: isActive,
+            publisher : getID()
         };
 
         axiosInstance.post('http://localhost:8080/Article/create', articleData)
@@ -60,8 +80,13 @@ const Articles = () => {
                 setProfesseurIds([]);
                 setDoctorantIds([]);
                 setIsActive(false);
+                setPublisher(getID())
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Failed to create article:', error);
                 setSnackbarMessage('Failed to create article.');
                 setSnackbarSeverity('error');

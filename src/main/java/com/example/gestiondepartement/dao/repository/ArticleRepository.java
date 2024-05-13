@@ -13,5 +13,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article>findByisActiveFalse();
 
+    List<Article>findByPublisher_Id(Long id);
+
+
+
 }
 

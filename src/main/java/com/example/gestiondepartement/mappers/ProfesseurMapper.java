@@ -21,6 +21,7 @@ public class ProfesseurMapper {
         professeurDTO.setNumero(professeur.getNumero());
         professeurDTO.setActive(professeur.isActive());
         professeurDTO.setPassword(professeur.getPassword());
+        professeurDTO.setChatpassword(professeur.getChatpassword());
 
         //verifier le reste
 
@@ -45,6 +46,7 @@ public class ProfesseurMapper {
         professeur.setNumero(professeurDTO.getNumero());
         professeur.setActive(professeurDTO.isActive());
         professeur.setPassword(professeurDTO.getPassword());
+        professeur.setChatpassword(professeurDTO.getChatpassword());
 
         //verifier le reste
 

@@ -1,36 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Typography, TextField, Paper, Snackbar } from '@mui/material';
+import { Box, Button, Typography, TextField, Paper, Snackbar, List, ListItem, ListItemText } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+function getID() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.id
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+    }
+}
+
 const Articles = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [authorIds, setAuthorIds] = useState([]);
-    const [authors, setAuthors] = useState([]);
+    const [professeurIds, setProfesseurIds] = useState([]);
+    const [doctorantIds, setDoctorantIds] = useState([]);
+    const [professeurs, setProfesseurs] = useState([]);
+    const [doctorants, setDoctorants] = useState([]);
+    const [publisher, setPublisher] = useState(null);
+
+    const [isActive, setIsActive] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
     useEffect(() => {
         axiosInstance.get('http://localhost:8080/professeur/all')
-            .then(response => setAuthors(response.data))
-            .catch(error => console.error('Failed to fetch authors:', error));
+            .then(response => setProfesseurs(response.data))
+            .catch(error => console.error('Failed to fetch professeurs:', error));
     }, []);
+
+    useEffect(() => {
+        // Clear doctorants when professeurIds change
+        setDoctorants([]);
+        setDoctorantIds([]);
+        professeurIds.forEach(prof => {
+            axiosInstance.get(`http://localhost:8080/professeur/DoctoransOfProfesseur/${prof.id}`)
+                .then(response => {
+                    setDoctorants(prev => [...prev, ...response.data]);
+                })
+                .catch(error => console.error(`Failed to fetch doctorants for professeur ${prof.id}:`, error));
+        });
+    }, [professeurIds]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const articleData = {
             titre: title,
             description: content,
-            publicationDate: new Date(), // Today's date
-            authorIds: authorIds.map(author => author.id)
+            publicationDate: new Date(),
+            authorIds: [...professeurIds.map(prof => prof.id), ...doctorantIds.map(doc => doc.id)],
+            isActive: isActive,
+            publisher : getID()
         };
 
         axiosInstance.post('http://localhost:8080/Article/create', articleData)
@@ -40,9 +77,16 @@ const Articles = () => {
                 setOpenSnackbar(true);
                 setTitle('');
                 setContent('');
-                setAuthorIds([]);
+                setProfesseurIds([]);
+                setDoctorantIds([]);
+                setIsActive(false);
+                setPublisher(getID())
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Failed to create article:', error);
                 setSnackbarMessage('Failed to create article.');
                 setSnackbarSeverity('error');
@@ -81,18 +125,36 @@ const Articles = () => {
                 />
                 <Autocomplete
                     multiple
-                    options={authors}
+                    options={professeurs}
                     getOptionLabel={(option) => option.nom}
-                    value={authorIds}
+                    value={professeurIds}
                     onChange={(event, newValue) => {
-                        setAuthorIds(newValue);
+                        setProfesseurIds(newValue);
                     }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             variant="outlined"
-                            label="Authors"
-                            placeholder="Select authors"
+                            label="Professeurs"
+                            placeholder="Select professeurs"
+                        />
+                    )}
+                    sx={{ mt: 2, mb: 2 }}
+                />
+                <Autocomplete
+                    multiple
+                    options={doctorants}
+                    getOptionLabel={(option) => `${option.nom} ${option.prenom}`}
+                    value={doctorantIds}
+                    onChange={(event, newValue) => {
+                        setDoctorantIds(newValue);
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Doctorants"
+                            placeholder="Select doctorants"
                         />
                     )}
                     sx={{ mt: 2, mb: 2 }}

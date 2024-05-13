@@ -21,9 +21,24 @@ import UpdateProfile from './UpdateProfile'; // Make sure to import the UpdatePr
 // Assuming theme is configured in your project
 import theme from '../../../theme/theme';
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
 
+function getID() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
 
-const ProfileProfSettings = ({ professorId = 60 }) => {
+    try {
+
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.id
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+    }
+}
+
+const ProfileProfSettings = ({ professorId = getID() }) => {
     const [professorDetails, setProfessorDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +57,10 @@ const ProfileProfSettings = ({ professorId = 60 }) => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Error fetching professor details:', error);
                 setLoading(false);
             });

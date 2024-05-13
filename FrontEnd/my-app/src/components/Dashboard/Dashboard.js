@@ -1,6 +1,33 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem, ListItemIcon, ListItemText, Typography, Collapse, ThemeProvider } from '@mui/material';
-import { ExpandLess, ExpandMore, Notifications, Forum, Settings, Announcement, Publish,CalendarViewDaySharp,Article, LibraryBooks,AddSharp } from '@mui/icons-material';
+import {
+    Box,
+    CssBaseline,
+    Drawer,
+    AppBar,
+    Toolbar,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+    Collapse,
+    ThemeProvider,
+    Button
+} from '@mui/material';
+import {
+    ExpandLess,
+    ExpandMore,
+    Notifications,
+    Forum,
+    Settings,
+    Announcement,
+    Publish,
+    CalendarViewDaySharp,
+    Article,
+    LibraryBooks,
+    AddSharp,
+    ExitToApp
+} from '@mui/icons-material';
 import theme from '../../theme/theme';
 
 // Import notification and settings components
@@ -9,8 +36,11 @@ import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
 import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
 import ProfileSettings from './ProfileSettings/ProfileSettings';
 import Articles from './Articles/Articles';
-import chatComponent from "./Chat/ChatComponent";
-import FalseActiveArticles from "./Notifications/FalseActiveArticles"; // Ensure the path is correct
+import FalseActiveArticles from "./Notifications/FalseActiveArticles";
+import HandleLogout from "../login/Logout";
+import Chat from "./Chat/Chat";
+import ArticleDisplay from "./Articles/ArticleDisplay";
+import AllArticle from "./Articles/AllArticle";
 //import CreateArticle from './Articles/CreateArticle'; // Path to the component that handles article creation
 //import AllArticles from './Articles/AllArticles'; // Path to the component that lists all articles
 
@@ -37,7 +67,7 @@ const Dashboard = () => {
     const renderComponent = () => {
         switch (selectedComponent) {
             case 'Discussion':
-                return <Typography variant="body2">Discussion Content</Typography>;
+                return <Chat/>;
             case 'ProfileSettings':
                 return <ProfileSettings />;
             case 'Announcements':
@@ -54,10 +84,12 @@ const Dashboard = () => {
                 return <ProfesseurChangeTeamRequests />;
             case 'CreateArticle':
                 return <Articles/>;
-            case 'AllArticles':
-                return <Typography variant="body2">Announcements Content</Typography>;
             case 'MyArticles':
-                return <Typography variant="body2">Announcements Content</Typography>;
+                return <ArticleDisplay/>;
+            case 'AllArticles':
+                return <AllArticle/>;
+            case 'Logout':
+                return <HandleLogout/>;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -145,6 +177,16 @@ const Dashboard = () => {
                                     </ListItem>
                                 </List>
                             </Collapse>
+                            <ListItem>
+                                <Button
+                                    fullWidth
+                                    startIcon={<ExitToApp />}
+                                    onClick={() => handleMenuItemClick('Logout')}
+                                    sx={{ color: 'white', backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
+                                >
+                                    Log Out
+                                </Button>
+                            </ListItem>
                         </List>
                     </Box>
                 </Drawer>
@@ -159,6 +201,7 @@ const Dashboard = () => {
                     <Toolbar />
                     {renderComponent()}
                 </Box>
+
             </Box>
         </ThemeProvider>
     );

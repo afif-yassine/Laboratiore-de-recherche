@@ -3,12 +3,26 @@ import axios from 'axios';
 import { Container, Paper, Typography, FormControl, InputLabel, Select, MenuItem, Button, Box, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+function getID() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
 
-const ChangeTeamRequest = ({ profID = 58 }) => {
+    try {
+
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.id
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+    }
+}
+const ChangeTeamRequest = ({ profID = getID() }) => {
     const [newEquipe, setNewEquipe] = useState('');
     const [equipes, setEquipes] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -39,6 +53,10 @@ const ChangeTeamRequest = ({ profID = 58 }) => {
                 setNewEquipe(''); // Reset the selection
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error('Failed to submit change team request:', error);
                 setSnackbarMessage('Failed to submit request.');
                 setSnackbarSeverity('error');

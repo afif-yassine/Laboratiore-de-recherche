@@ -17,4 +17,6 @@ public interface DoctorantService {
     ProfesseurDTO getEncadrantDeDoctorant(Long id);
 
     DoctorantDTO updateDoctorant(DoctorantDTO doctorantDTO);
+
+    DoctorantDTO getDoctorantById(Long id);
 }

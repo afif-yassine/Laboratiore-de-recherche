@@ -34,6 +34,10 @@ const RegistrationForm = () => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error("Error fetching teams data:", error);
                 setLoading(false);
             });
@@ -48,6 +52,10 @@ const RegistrationForm = () => {
                 setLoading(false);
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 console.error("Error fetching Profs data:", error);
                 setLoading(false);
             });
@@ -77,6 +85,10 @@ const RegistrationForm = () => {
                 setSubmissionStatus({ submitted: true, error: false });
             })
             .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
                 setLoading(false);
                 console.error("Registration failed", error);
                 setSubmissionStatus({ submitted: true, error: true });

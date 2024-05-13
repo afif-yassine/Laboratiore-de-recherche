@@ -5,39 +5,41 @@ import {
     Box,
     Grid,
     Button,
-    Paper,
     Card,
     CardContent,
     CardActions,
-    CardMedia
+    CardMedia, Stack
 } from '@mui/material';
 import axios from 'axios';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import axiosInstance from "../login/interceptor";
 
+
 const AboutUs = () => {
-    const [equipes, setEquipes] = useState([]);
+    const [teams, setTeams] = useState([]);
 
     useEffect(() => {
         axiosInstance.get('http://localhost:8080/equipe/all')
             .then((response) => {
-                setEquipes(response.data);
+                setTeams(response.data);
             })
             .catch((error) => {
-                console.error("There was an error fetching the team data:", error);
+                console.error("Error fetching the team data:", error);
             });
     }, []);
 
     return (
         <div>
-            {/* Hero section */}
+            {/* Hero section with large background image */}
             <Box
                 sx={{
-                    backgroundImage: `url(${process.env.PUBLIC_URL + '/images/chercheurs.png'})`,
-                    padding: '11rem 0',
+                    backgroundImage: `url(${process.env.PUBLIC_URL + '/images/b.jpeg'})`,
+                    padding: '12rem 0',
                     color: 'white',
                     textAlign: 'center',
                     position: 'relative',
+                    backgroundSize: 'cover',  // Ensures the image covers the full area
+                    backgroundRepeat: 'no-repeat',  // Prevents the image from repeating
                     '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -45,58 +47,123 @@ const AboutUs = () => {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
                         zIndex: -1,
                     },
                 }}
             >
-                <Typography variant="h2" sx={{ color: 'rgba(227, 64, 4, 1)', textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-                    Notre Laboratoire
+
+                <Typography variant="h2" sx={{fontWeight: 'bold', textShadow: '2px 2px 8px rgba(0,0,0,0.7)'}}>
+                    Explore Our Lab
                 </Typography>
-                <Typography variant="subtitle1" sx={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-                    Learn about who we are
+                <Typography variant="subtitle1" sx={{fontSize: '1.5rem', textShadow: '2px 2px 8px rgba(0,0,0,0.7)'}}>
+                    Where Innovation Meets Tradition
                 </Typography>
             </Box>
 
-            {/* Intro section */}
-            <Container maxWidth="md" sx={{ py: 4 }}>
-                <Typography variant="h4" gutterBottom>Qui sommes-nous ?</Typography>
-                <Typography paragraph>
-                    Detailed information about the laboratory's mission, vision, and history...
-                </Typography>
-                <Button variant="contained" color="primary">En savoir plus</Button>
+            {/* About the Lab section with images */}
+            <Container maxWidth="lg" sx={{py: 4}}>
+                <Typography variant="h4" gutterBottom>About the Lab</Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Typography paragraph>
+                            Founded in [Year], our laboratory at Faculté des Sciences, Ibn Zohr University has become a
+                            beacon of innovation and research excellence. We specialize in cutting-edge areas like
+                            artificial intelligence, cybersecurity, and computational biology, contributing globally
+                            recognized research.
+                        </Typography>
+                        <Button variant="contained" color="primary" href="http://www.fsa.ac.ma/">Learn More</Button>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Card>
+                            <CardMedia
+                                component="img"
+                                height="auto"
+                                image={`${process.env.PUBLIC_URL + '/images/chercheurs.png'}`} // Ensure you have a suitable image
+                                alt="Lab Activities"
+                            />
+                        </Card>
+                    </Grid>
+                </Grid>
             </Container>
 
-            {/* Values section */}
-            <Box sx={{ backgroundColor: '#eee', py: 4 }}>
-                <Container maxWidth="md">
-                    <Typography variant="h4" gutterBottom>Nos valeurs</Typography>
-                    {/* Values could be a list or a set of cards */}
+            {/* Core Values with images */}
+            <Box sx={{backgroundColor: '#f5f5f5', py: 4}}>
+                <Container maxWidth="lg">
+                    <Typography variant="h4" gutterBottom>Our Values</Typography>
                     <Grid container spacing={2}>
-                        {/* Values are listed here */}
-                    </Grid>
-                </Container>
-            </Box>
-
-            {/* Team section */}
-            <Container maxWidth="md" sx={{ py: 4 }}>
-                <Typography variant="h4" gutterBottom>Nos équipes</Typography>
-                <Grid container spacing={2}>
-                    {equipes.map((equipe) => (
-                        <Grid item xs={12} sm={6} md={4} key={equipe.id}>
+                        <Grid item xs={12} sm={4}>
                             <Card>
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image="/images/chercheurs.png" // Replace with your image path
-                                    alt={equipe.nom}
+                                    image={`${process.env.PUBLIC_URL + '/images/Innovation.png'}`} // Update with a relevant image
+                                    alt="Innovation"
                                 />
-                                <CardContent sx={{ textAlign: 'center' }}>
-                                    <Typography variant="h5" component="p" sx={{ textTransform: 'uppercase', fontWeight: 'bold', }}>
-                                        {equipe.nom}
+                                <CardContent>
+                                    <Typography variant="h5">Innovation</Typography>
+                                    <Typography>
+                                        Driving forward with creativity and pioneering research, our lab explores the
+                                        unknown, paving the way for new technologies.
                                     </Typography>
-                                    <Typography variant="subtitle1" sx={{ mb: 1 }}>{equipe.axederecherche}</Typography>
-                                    <Typography variant="body2">{equipe.description}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={`${process.env.PUBLIC_URL + '/images/Integrity.webp'}`} // Update with a relevant image
+                                    alt="Integrity"
+                                />
+                                <CardContent>
+                                    <Typography variant="h5">Integrity</Typography>
+                                    <Typography>
+                                        Adherence to the highest ethical standards guides all our research and
+                                        professional conduct.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={`${process.env.PUBLIC_URL + '/images/Collaboration.png'}`} // Update with a relevant image
+                                    alt="Collaboration"
+                                />
+                                <CardContent>
+                                    <Typography variant="h5">Collaboration</Typography>
+                                    <Typography>
+                                        We promote a collaborative environment that enhances our collective expertise
+                                        and achieves common goals.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Box>
+
+            {/* Our Team with images */}
+            <Container maxWidth="lg" sx={{py: 4}}>
+                <Typography variant="h4" gutterBottom>Research Focus</Typography>
+                <Grid container spacing={2}>
+                    {teams.map((team) => (
+                        <Grid item xs={12} sm={6} md={4} key={team.id}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="200"
+                                    image={process.env.PUBLIC_URL + '/images/chercheurs.png'} // Update with actual team member photos
+                                    alt={team.axederecherche}
+                                />
+                                <CardContent>
+                                    <Typography variant="h5" sx={{fontWeight: 'bold'}}>{team.nom}</Typography>
+                                    <Typography variant="subtitle1">{team.axederecherche}</Typography>
+                                    <Typography>{team.description}</Typography>
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -104,48 +171,63 @@ const AboutUs = () => {
                 </Grid>
             </Container>
 
-            {/* Location section */}
-            <Container maxWidth="md" sx={{ py: 4 }}>
-                <Card sx={{ p: 2 }}>
-                    <CardContent>
-                        <Typography variant="h4" gutterBottom>Localisation</Typography>
-                        <Typography variant="subtitle1" gutterBottom>
-                            Laboratoire de Recherche Informatique, Université Ibn Zohr
-                        </Typography>
-                        <Typography>Agadir, Maroc</Typography>
-                        <Typography paragraph sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                            <LocationOnIcon sx={{ mr: 1 }} />
-                            Accédez à notre laboratoire sur le campus pour en savoir plus sur nos activités et nos recherches.
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button variant="contained" color="primary" href="https://maps.google.com/?q=Université+Ibn+Zohr">
-                            Voir sur la carte
-                        </Button>
-                    </CardActions>
-                </Card>
-            </Container>
-
-            {/* Additional information section */}
-            <Container maxWidth="md" sx={{ py: 4 }}>
-                <Typography variant="h4" gutterBottom>À propos du laboratoire</Typography>
-                <Typography paragraph>
-                    Fondé en [Year], le Laboratoire de Recherche Informatique a constamment été à la frontière des découvertes informatiques. Avec des projets allant de l'intelligence artificielle à la sécurité des données, nous cherchons non seulement à innover mais aussi à préparer la prochaine génération de chercheurs à avoir un impact positif sur le monde.
-                </Typography>
-                <Typography paragraph>
-                    Nos infrastructures comprennent [describe labs, computing resources, etc.], permettant à nos chercheurs et étudiants de pousser les limites de la science et de la technologie.
-                </Typography>
-                {/* Any additional paragraphs or information */}
-            </Container>
-
-            {/* Contact or call-to-action section */}
-            <Box sx={{ backgroundColor: 'primary.main', color: 'white', py: 4, textAlign: 'center' }}>
-                <Typography variant="h4" gutterBottom>Contactez-nous</Typography>
-                <Typography paragraph>
-                    Descriptions or call-to-action related to inquiries and getting in touch.
-                </Typography>
-                <Button variant="contained" color="secondary">Nous joindre</Button>
+            <Box sx={{backgroundColor: '#f5f5f5', py: 8}}>
+                <Stack direction="row" spacing={2} justifyContent="center">
+                    <Button variant="outlined" image={process.env.PUBLIC_URL +'./images/pictoEMPLOISTAGES.a30d32beeeee.svg'}>
+                        Jobs / Internships
+                    </Button>
+                    <Button variant="outlined" image={process.env.PUBLIC_URL +'./images/pictoMEDIATHEQUE.03dd756115f7.svg'}>
+                        Media Library
+                    </Button>
+                    <Button variant="outlined" image={process.env.PUBLIC_URL +'./images/pictoMEDIATHEQUE.03dd756115f7.svg'}>
+                        People
+                    </Button>
+                    <Button variant="outlined" image={process.env.PUBLIC_URL +'./images/pictoScolaires.8c3c945d2b65.svg'}>
+                        Schools
+                    </Button>
+                </Stack>
             </Box>
+
+            {/* Location and Contact with map image */}
+            <Container maxWidth="lg" sx={{py: 4}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Card raised sx={{height: '100%', p: 2}}>
+                            <CardContent>
+                                <Typography variant="h4" gutterBottom>Location</Typography>
+                                <Typography variant="subtitle1">
+                                    Faculté des Sciences, Université Ibn Zohr
+                                </Typography>
+                                <Typography>Agadir, Morocco</Typography>
+                                <Typography sx={{display: 'flex', alignItems: 'center', mt: 2}}>
+                                    <LocationOnIcon sx={{mr: 1}}/>
+                                    Visit our campus to learn more about our research and activities.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button variant="contained" color="primary"
+                                        href="https://maps.google.com/?q=Université+Ibn+Zohr">
+                                    View on Map
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Card raised sx={{height: '100%', p: 2}}>
+                            <CardContent>
+                                <Typography variant="h4" gutterBottom>Contact Us</Typography>
+                                <Typography>
+                                    For inquiries, collaborations, or more information, feel free to reach out to our
+                                    administration.
+                                </Typography>
+                                <Button variant="contained" color="secondary" sx={{mt: 2}}>
+                                    Get in Touch
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </Container>
         </div>
     );
 };

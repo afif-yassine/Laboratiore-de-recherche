@@ -1,5 +1,8 @@
 package com.example.gestiondepartement.rest;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class DoctorantSearchDTO {
 
     private Long id;
@@ -11,10 +14,13 @@ public class DoctorantSearchDTO {
     private String numero ;
     private ProfesseurDTO encadrant;
 
-
+    @Getter
+    @Setter
+    private String chatpassword;
     private boolean active;
     private String password;
     private ProfesseurDTO coEncadrant;
+
 
     public Long getId() {
         return id;
