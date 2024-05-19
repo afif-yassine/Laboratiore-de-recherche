@@ -9,7 +9,7 @@ const FalseActiveArticles = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axiosInstance.get('http://localhost:8080/admin/allArticle')
+        axiosInstance.get('http://localhost:8080/admin/notification/AllArticleFiveDays')
             .then(response => {
                 setArticles(response.data);
                 setLoading(false);

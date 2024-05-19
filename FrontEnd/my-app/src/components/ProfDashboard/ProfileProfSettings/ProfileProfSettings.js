@@ -1,4 +1,4 @@
-// ./ProfileProfSettings/ProfileProfSettings.js
+// ./ProfileDoctorantSettings/ProfileDoctorantSettings.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -37,8 +37,7 @@ function getID() {
         return false;
     }
 }
-
-const ProfileProfSettings = ({ professorId = getID() }) => {
+const ProfileSettings = ({ professorId = getID() }) => {
     const [professorDetails, setProfessorDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -144,4 +143,4 @@ const ProfileProfSettings = ({ professorId = getID() }) => {
     );
 };
 
-export default ProfileProfSettings;
+export default ProfileSettings;

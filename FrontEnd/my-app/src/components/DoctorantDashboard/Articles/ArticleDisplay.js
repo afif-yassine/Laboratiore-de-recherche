@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CircularProgress, Box } from '@mui/material';
-import axiosInstance from "../../login/interceptor";
-import {jwtDecode} from "jwt-decode"; // Corrected the import
+import {
+    Card, CardContent, Typography, CircularProgress, Box, CardMedia, Button
+} from '@mui/material';
+import axiosInstance from "../../login/interceptor"; // Ensure the path is correct
+import { jwtDecode } from "jwt-decode";
 
 function getID() {
     const token = localStorage.getItem('token');
@@ -17,61 +19,81 @@ function getID() {
     }
 }
 
-const ArticleDisplay = ({ articleId = getID() }) => { // Corrected to call getID() as default
-    const [article, setArticle] = useState(null);
+const ArticleDisplay = ({ articleId = getID() }) => {
+    const [articles, setArticles] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchProfessorDetails();
+        fetchArticles();
     }, [articleId]);
 
-    const fetchProfessorDetails = () => {
+    const fetchArticles = () => {
         setLoading(true);
-        axiosInstance.get(`http://localhost:8080/Article/MesArticles/${articleId}`) // Used articleId
+        axiosInstance.get(`http://localhost:8080/Article/MesArticles/${articleId}`)
             .then(response => {
-                setArticle(response.data);
+                setArticles(response.data);
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching professor details:', error);
+                console.error('Error fetching articles:', error);
                 setError(error.toString());
                 setLoading(false);
             });
     };
 
-    if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}><CircularProgress /></Box>;
-    if (error) return <Typography color="error" align="center">Error: {error}</Typography>;
-    if (!article) return <Typography align="center">No article found</Typography>;
+    if (isLoading) {
+        return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}><CircularProgress /></Box>;
+    }
+    if (error) {
+        return <Typography color="error" align="center">Error: {error}</Typography>;
+    }
+    if (!articles || articles.length === 0) {
+        return (
+            <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Typography align="center" variant="h5">No articles found.</Typography>
+                <Button variant="outlined" sx={{ mt: 2 }} onClick={fetchArticles}>
+                    Try Again
+                </Button>
+            </Box>
+        );
+    }
 
     return (
-        <Card sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
-                {article.map((article) => (
-                    <Card key={article.id} sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5" component="div" gutterBottom>
-                                {article.titre || 'Untitled Article'}
+        <Box sx={{ maxWidth: 800, mx: 'auto', mt: 3, p: 2 }}>
+            <Typography variant="h6" color="primary" sx={{ textAlign: 'center', mt: 1 }}>
+                Articles ({articles.length})
+            </Typography>
+            {articles.map(article => (
+                <Card key={article.id} sx={{ mb: 2, transition: '0.3s', "&:hover": { boxShadow: 6 } }}>
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={article.imageUrl || 'https://source.unsplash.com/random/?book,science'} // Fallback to a random image related to books or science
+                        alt={article.titre}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {article.titre || 'Untitled Article'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {article.description || 'No description available.'}
+                        </Typography>
+                        <Typography variant="overline" display="block" gutterBottom>
+                            Published on: {new Date(article.publicationDate).toLocaleDateString()}
+                        </Typography>
+                        {article.authorIds.length > 0 ?
+                            <Typography variant="caption" display="block" gutterBottom>
+                                Author IDs: {article.authorIds.join(', ')}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {article.description || 'No description available.'}
+                            : <Typography variant="caption" display="block" gutterBottom>
+                                No authors listed.
                             </Typography>
-                            <Typography variant="overline" display="block" gutterBottom>
-                                Published on: {article.publicationDate}
-                            </Typography>
-                            {article.authorIds.length > 0 ?
-                                <Typography variant="caption" display="block" gutterBottom>
-                                    Author IDs: {article.authorIds.join(', ')}
-                                </Typography>
-                                : <Typography variant="caption" display="block" gutterBottom>
-                                    No authors listed.
-                                </Typography>
-                            }
-                        </CardContent>
-                    </Card>
-                ))}
-            </Box>
-        </Card>
+                        }
+                    </CardContent>
+                </Card>
+            ))}
+        </Box>
     );
 };
 

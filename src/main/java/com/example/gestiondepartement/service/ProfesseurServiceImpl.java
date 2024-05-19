@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -164,6 +165,12 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     @Override
     public List<ProfesseurDTO> getBureau() {
         List<Professeur> professeurs = professeurRepository.findAllByIsadminTrueAndIschefTrue();
+        return professeurs.stream().map(ProfesseurMapper::toProfesseurDTO).toList();
+    }
+
+    @Override
+    public List<ProfesseurDTO> allProfNoPA() {
+        List<Professeur> professeurs = professeurRepository.findByStatusIn(Arrays.asList("PES", "PH", "Treasury"));
         return professeurs.stream().map(ProfesseurMapper::toProfesseurDTO).toList();
     }
     /*------------------------------------Professeur--------------------------------------------------*/

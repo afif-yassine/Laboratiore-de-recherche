@@ -1,55 +1,16 @@
 package com.example.gestiondepartement.rest;
 
-import java.util.Date;
+import lombok.*;
 
+import java.time.LocalDate;
+
+@Getter
+@Setter
 public class PublicationDTO {
 
     private Long id;
-    private String doi;
-    private Date publicationDate;
-    private Long articleId; // Assuming you want to reference the associated article by ID
-
-    // Default constructor
-    public PublicationDTO() {}
-
-    // Constructor with all fields
-    public PublicationDTO(Long id, String doi, Date publicationDate, Long articleId) {
-        this.id = id;
-        this.doi = doi;
-        this.publicationDate = publicationDate;
-        this.articleId = articleId;
-    }
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public Long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
+    private String content;
+    private LocalDate datePublished;
+    private String photoBase64;  // Using Base64-encoded string for photo to simplify transfer over JSON
+    private String local;
 }

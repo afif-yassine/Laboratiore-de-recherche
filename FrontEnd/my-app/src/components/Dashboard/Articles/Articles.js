@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Typography, TextField, Paper, Snackbar, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, Typography, TextField, Paper, Snackbar } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 import axiosInstance from "../../login/interceptor";
-import {jwtDecode} from "jwt-decode";
-
+import { jwtDecode } from 'jwt-decode';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -16,10 +15,9 @@ function getID() {
     if (!token) return false;
 
     try {
-
         const decoded = jwtDecode(token);
         console.log(decoded);
-        return decoded.id
+        return decoded.id;
     } catch (error) {
         console.error("Error decoding token:", error);
         return false;
@@ -34,20 +32,23 @@ const Articles = () => {
     const [professeurs, setProfesseurs] = useState([]);
     const [doctorants, setDoctorants] = useState([]);
     const [publisher, setPublisher] = useState(null);
-
     const [isActive, setIsActive] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+    const [pdfFile, setPdfFile] = useState(null);
 
     useEffect(() => {
         axiosInstance.get('http://localhost:8080/professeur/all')
-            .then(response => setProfesseurs(response.data))
-            .catch(error => console.error('Failed to fetch professeurs:', error));
+            .then(response => {
+                setProfesseurs(response.data);
+            })
+            .catch(error => {
+                console.error('Failed to fetch professeurs:', error);
+            });
     }, []);
 
     useEffect(() => {
-        // Clear doctorants when professeurIds change
         setDoctorants([]);
         setDoctorantIds([]);
         professeurIds.forEach(prof => {
@@ -55,7 +56,9 @@ const Articles = () => {
                 .then(response => {
                     setDoctorants(prev => [...prev, ...response.data]);
                 })
-                .catch(error => console.error(`Failed to fetch doctorants for professeur ${prof.id}:`, error));
+                .catch(error => {
+                    console.error(`Failed to fetch doctorants for professeur ${prof.id}:`, error);
+                });
         });
     }, [professeurIds]);
 
@@ -64,13 +67,21 @@ const Articles = () => {
         const articleData = {
             titre: title,
             description: content,
-            publicationDate: new Date(),
-            authorIds: [...professeurIds.map(prof => prof.id), ...doctorantIds.map(doc => doc.id)],
+            publicationDate: new Date().toISOString(), // ISO string for better compatibility
             isActive: isActive,
-            publisher : getID()
+            publisher: parseInt(getID()), // Ensure conversion to integer
+            authorIds: professeurIds.concat(doctorantIds).map(id => parseInt(id)) // Ensure all IDs are integers
         };
 
-        axiosInstance.post('http://localhost:8080/Article/create', articleData)
+        const formData = new FormData();
+        formData.append('article', new Blob([JSON.stringify(articleData)], { type: 'application/json' }));
+        formData.append('file', pdfFile);
+
+        axiosInstance.post('http://localhost:8080/Article/create', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
             .then(response => {
                 setSnackbarMessage('Article created successfully!');
                 setSnackbarSeverity('success');
@@ -80,19 +91,16 @@ const Articles = () => {
                 setProfesseurIds([]);
                 setDoctorantIds([]);
                 setIsActive(false);
-                setPublisher(getID())
+                setPdfFile(null);
             })
             .catch(error => {
-                if (error.response && error.response.status === 401) {
-                    localStorage.removeItem('token');
-                    window.location.href = '/login';
-                }
                 console.error('Failed to create article:', error);
                 setSnackbarMessage('Failed to create article.');
                 setSnackbarSeverity('error');
                 setOpenSnackbar(true);
             });
     };
+
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -122,6 +130,16 @@ const Articles = () => {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     required
+                />
+                <TextField
+                    type="file"
+                    accept="application/pdf"
+                    label="Upload PDF"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) => setPdfFile(e.target.files[0])}
+                    sx={{ mt: 2 }}
                 />
                 <Autocomplete
                     multiple

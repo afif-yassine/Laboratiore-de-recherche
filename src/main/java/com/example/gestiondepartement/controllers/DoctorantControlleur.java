@@ -29,8 +29,8 @@ public class DoctorantControlleur {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String removeDoctorant (@PathVariable("id") Long id){
-        return  doctorantService.removeDoctorant(id);
+    public void removeDoctorant (@PathVariable("id") Long id){
+          doctorantService.removeDoctorant(id);
     }
 
     @PutMapping("/update")

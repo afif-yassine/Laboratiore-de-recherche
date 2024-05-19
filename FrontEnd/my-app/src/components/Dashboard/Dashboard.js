@@ -26,7 +26,10 @@ import {
     Article,
     LibraryBooks,
     AddSharp,
-    ExitToApp
+    ExitToApp,
+    GroupAdd,
+    DeleteForever,
+    SwapHoriz
 } from '@mui/icons-material';
 import theme from '../../theme/theme';
 
@@ -41,6 +44,11 @@ import HandleLogout from "../login/Logout";
 import Chat from "./Chat/Chat";
 import ArticleDisplay from "./Articles/ArticleDisplay";
 import AllArticle from "./Articles/AllArticle";
+import CreateTeam from "./Management/CreateTeam";
+import DeleteProfessor from "./Management/DeleteProfessor";
+import DeleteDoctorant from "./Management/DeleteDoctorant";
+import ChangeProfessorRole from "./Management/ChangeProfessorRole";
+import CreatePublication from "./Annonces/CreatePublication";
 //import CreateArticle from './Articles/CreateArticle'; // Path to the component that handles article creation
 //import AllArticles from './Articles/AllArticles'; // Path to the component that lists all articles
 
@@ -50,13 +58,23 @@ const Dashboard = () => {
     const [open, setOpen] = useState(false);
     const [articlesOpen, setArticlesOpen] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState('');
+    const [managementOpen, setManagementOpen] = useState(false);
+
 
 
     const handleClick = (menu) => {
-        if (menu === 'notifications') {
-            setOpen(!open);
-        } else if (menu === 'articles') {
-            setArticlesOpen(!articlesOpen);
+        switch (menu) {
+            case 'notifications':
+                setOpen(!open);
+                break;
+            case 'articles':
+                setArticlesOpen(!articlesOpen);
+                break;
+            case 'management':
+                setManagementOpen(!managementOpen);
+                break;
+            default:
+            // do nothing
         }
     };
 
@@ -70,10 +88,16 @@ const Dashboard = () => {
                 return <Chat/>;
             case 'ProfileSettings':
                 return <ProfileSettings />;
-            case 'Announcements':
-                return <Typography variant="body2">Announcements Content</Typography>;
+            case 'CreateTeam':
+                return <CreateTeam/>;  // Placeholder, replace with actual component
+            case 'DeleteProfesseur':
+                return <DeleteProfessor />;  // Placeholder, replace with actual component
+            case 'DeleteDoctorant':
+                return <DeleteDoctorant />;  // Placeholder, replace with actual component
+            case 'ChangeProfessorRole':
+                return <ChangeProfessorRole />;  // Placeholder, replace with actual component
             case 'Publications':
-                return <Typography variant="body2">Publications Content</Typography>;
+                return <CreatePublication/>;
             case 'FalseActiveArticles':
                 return <FalseActiveArticles />;
             case 'DoctorantSignUpRequests':
@@ -148,10 +172,33 @@ const Dashboard = () => {
                                 <ListItemIcon><Settings /></ListItemIcon>
                                 <ListItemText primary="Paramètre de Profile" />
                             </ListItem>
-                            <ListItem button onClick={() => handleMenuItemClick('Announcements')}>
-                                <ListItemIcon><Announcement /></ListItemIcon>
-                                <ListItemText primary="Announcements" />
+                            <ListItem button onClick={() => handleClick('management')}>
+                                <ListItemIcon>
+                                    <Settings />
+                                </ListItemIcon>
+                                <ListItemText primary="Management" />
+                                {managementOpen ? <ExpandLess /> : <ExpandMore />}
                             </ListItem>
+                            <Collapse in={managementOpen} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('CreateTeam')}>
+                                        <ListItemIcon><GroupAdd /></ListItemIcon>
+                                        <ListItemText primary="Create Team" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('DeleteProfesseur')}>
+                                        <ListItemIcon><DeleteForever /></ListItemIcon>
+                                        <ListItemText primary="Delete Professeur" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('DeleteDoctorant')}>
+                                        <ListItemIcon><DeleteForever /></ListItemIcon>
+                                        <ListItemText primary="Delete Doctorant" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('ChangeProfessorRole')}>
+                                        <ListItemIcon><SwapHoriz /></ListItemIcon>
+                                        <ListItemText primary="Change Prof Role" />
+                                    </ListItem>
+                                </List>
+                            </Collapse>
                             <ListItem button onClick={() => handleMenuItemClick('Publications')}>
                                 <ListItemIcon><Publish /></ListItemIcon>
                                 <ListItemText primary="Publications" />

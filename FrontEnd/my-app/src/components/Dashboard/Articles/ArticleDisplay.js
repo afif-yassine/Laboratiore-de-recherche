@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CircularProgress, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Card, CardContent, Typography, CircularProgress, CardMedia, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { jwtDecode } from "jwt-decode";
 import axiosInstance from "../../login/interceptor";
-import {jwtDecode} from "jwt-decode"; // Corrected the import
 
 function getID() {
     const token = localStorage.getItem('token');
@@ -9,69 +10,149 @@ function getID() {
 
     try {
         const decoded = jwtDecode(token);
-        console.log(decoded);
-        return decoded.id
+        return decoded.id;
     } catch (error) {
         console.error("Error decoding token:", error);
         return false;
     }
 }
 
-const ArticleDisplay = ({ articleId = getID() }) => { // Corrected to call getID() as default
-    const [article, setArticle] = useState(null);
+const ArticleDisplay = ({ articleId = getID() }) => {
+    const [articles, setArticles] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [currentArticle, setCurrentArticle] = useState(null);
+    const [newTitle, setNewTitle] = useState("");
+    const [newDescription, setNewDescription] = useState("");
+    const [newPDF, setNewPDF] = useState(null);
 
     useEffect(() => {
-        fetchProfessorDetails();
+        fetchArticles();
     }, [articleId]);
 
-    const fetchProfessorDetails = () => {
+    const fetchArticles = () => {
         setLoading(true);
-        axiosInstance.get(`http://localhost:8080/Article/MesArticles/${articleId}`) // Used articleId
+        axiosInstance.get(`http://localhost:8080/Article/MesArticles/${articleId}`)
             .then(response => {
-                setArticle(response.data);
+                setArticles(response.data);
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching professor details:', error);
+                console.error('Error fetching articles:', error);
                 setError(error.toString());
                 setLoading(false);
             });
     };
 
-    if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}><CircularProgress /></Box>;
-    if (error) return <Typography color="error" align="center">Error: {error}</Typography>;
-    if (!article) return <Typography align="center">No article found</Typography>;
+    const handleOpenEditDialog = (article) => {
+        setCurrentArticle(article);
+        setNewTitle(article.titre);
+        setNewDescription(article.description);
+        setEditDialogOpen(true);
+    };
+
+    const handleUpdateArticle = () => {
+        const formData = new FormData();
+        formData.append("id", currentArticle.id);
+        formData.append("titre", newTitle);
+        formData.append("description", newDescription);
+        if (newPDF) formData.append("pdf", newPDF);
+
+        axiosInstance.put('http://localhost:8080/Article/update', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            const updatedArticles = articles.map(art => art.id === response.data.id ? response.data : art);
+            setArticles(updatedArticles);
+            setEditDialogOpen(false);
+        }).catch(error => {
+            console.error('Error updating article:', error);
+            setError(error.toString());
+        });
+    };
+
+    const handlePDFUpload = event => {
+        setNewPDF(event.target.files[0]);
+    };
+
+    if (isLoading) return <CircularProgress />;
+    if (error) return <Typography color="error">Error: {error}</Typography>;
+    if (!articles.length) return <Typography>No articles found</Typography>;
 
     return (
-        <Card sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
-                {article.map((article) => (
-                    <Card key={article.id} sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5" component="div" gutterBottom>
-                                {article.titre || 'Untitled Article'}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {article.description || 'No description available.'}
-                            </Typography>
-                            <Typography variant="overline" display="block" gutterBottom>
-                                Published on: {article.publicationDate}
-                            </Typography>
-                            {article.authorIds.length > 0 ?
-                                <Typography variant="caption" display="block" gutterBottom>
-                                    Author IDs: {article.authorIds.join(', ')}
-                                </Typography>
-                                : <Typography variant="caption" display="block" gutterBottom>
-                                    No authors listed.
-                                </Typography>
-                            }
-                        </CardContent>
-                    </Card>
-                ))}
-            </Box>
-        </Card>
+        <Box sx={{ maxWidth: 800, mx: 'auto', mt: 3, p: 2 }}>
+            <Typography variant="h6" color="primary" sx={{ textAlign: 'center', mt: 1 }}>
+                Articles ({articles.length})
+            </Typography>
+            {articles.map(article => (
+                <Card key={article.id} sx={{ mb: 2 }}>
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={article.imageUrl || 'https://source.unsplash.com/random/?book,science'}
+                        alt={article.titre}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {article.titre}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {article.description}
+                        </Typography>
+                        <IconButton onClick={() => handleOpenEditDialog(article)}>
+                            <EditIcon />
+                        </IconButton>
+                    </CardContent>
+                </Card>
+            ))}
+
+            {editDialogOpen && (
+                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+                    <DialogTitle>Edit Article</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Title"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={newTitle}
+                            onChange={e => setNewTitle(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Description"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            value={newDescription}
+                            onChange={e => setNewDescription(e.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            component="label"
+                            sx={{ mt: 2 }}
+                        >
+                            Upload PDF
+                            <input
+                                type="file"
+                                hidden
+                                onChange={handlePDFUpload}
+                            />
+                        </Button>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUpdateArticle}>Save</Button>
+                        <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+        </Box>
     );
 };
 

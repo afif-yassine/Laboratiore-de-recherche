@@ -1,78 +1,136 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CircularProgress, Box } from '@mui/material';
-import axiosInstance from "../../login/interceptor";
-import {jwtDecode} from "jwt-decode"; // Corrected the import
 
-function getID() {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Box, Typography, Button, Grid, Card, CardMedia, CardContent, CardActions, Container,
+    Paper, CircularProgress, MenuItem, FormControl, InputLabel, Select, OutlinedInput,
+    TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import FeaturedArticles from "../../entity/FeaturedArticles";  // Ensure the import path is correct based on your project structure
+import FilterControls from '../../entity/FilterControls';  // Ensure the import path is correct
 
-    try {
-        const decoded = jwtDecode(token);
-        console.log(decoded);
-        return decoded.id
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return false;
-    }
-}
+function AllArticle() {
+    const [articles, setArticles] = useState([]);
+    const [displayedArticles, setDisplayedArticles] = useState([]);
+    const [equipes, setEquipes] = useState([]);
+    const [professeurs, setProfesseurs] = useState([]);
+    const [selectedEquipe, setSelectedEquipe] = useState('');
+    const [selectedProfesseur, setSelectedProfesseur] = useState('');
+    const [titreFilter, setTitreFilter] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedArticle, setSelectedArticle] = useState(null);
+    const [authorDetails, setAuthorDetails] = useState([]);
 
-const ArticleDisplay = ({ articleId = getID() }) => { // Corrected to call getID() as default
-    const [article, setArticle] = useState(null);
-    const [isLoading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchProfessorDetails();
-    }, [articleId]);
+        fetchAllArticles();
+        fetchEquipes();
+        fetchProfesseurs();
+    }, []);
 
-    const fetchProfessorDetails = () => {
-        setLoading(true);
-        axiosInstance.get(`http://localhost:8080/Article/AllArticlesOfDashProf`) // Used articleId
+    const fetchAllArticles = () => {
+        axios.get('http://localhost:8080/admin/allArticle')
             .then(response => {
-                setArticle(response.data);
+                setArticles(response.data);
+                setDisplayedArticles(response.data);
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching professor details:', error);
-                setError(error.toString());
+                console.error('Error fetching articles:', error);
                 setLoading(false);
             });
     };
 
-    if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}><CircularProgress /></Box>;
-    if (error) return <Typography color="error" align="center">Error: {error}</Typography>;
-    if (!article) return <Typography align="center">No article found</Typography>;
+    const fetchEquipes = () => {
+        axios.get('http://localhost:8080/equipe/all')
+            .then(response => {
+                setEquipes(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching equipes:', error);
+            });
+    };
+
+    const fetchProfesseurs = () => {
+        axios.get('http://localhost:8080/professeur/all')
+            .then(response => {
+                setProfesseurs(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching professeurs:', error);
+            });
+    };
+
+    const handleArticleClick = async (article) => {
+        const authorIds = article.authorIds;
+        const authors = [];
+        for (const id of authorIds) {
+            const response = await axios.get(`http://localhost:8080/professeur/ProfesseursId2/${id}`);
+            authors.push(response.data);
+        }
+        setAuthorDetails(authors);
+        setSelectedArticle(article);
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedArticle(null);
+    };
+
+    const handleFilterChange = (filterType, value) => {
+        if (filterType === 'equipe' || filterType === 'professeur') {
+            const apiURL = filterType === 'equipe' ? `http://localhost:8080/Article/getArticlesByEquipeId/${value}` : `http://localhost:8080/Article/MesArticles/${value}`;
+            if (value) {
+                axios.get(apiURL)
+                    .then(response => {
+                        setArticles(response.data);
+                        filterArticles(titreFilter, response.data);
+                    });
+            } else {
+                fetchAllArticles();
+            }
+            if (filterType === 'equipe') setSelectedProfesseur('');
+            if (filterType === 'professeur') setSelectedEquipe('');
+        } else if (filterType === 'titre') {
+            setTitreFilter(value);
+            filterArticles(value, articles);
+        }
+    };
+
+    const filterArticles = (filterText, articlesArray) => {
+        const filtered = !filterText ? articlesArray : articlesArray.filter(article => article.titre.toLowerCase().includes(filterText.toLowerCase()));
+        setDisplayedArticles(filtered);
+    };
 
     return (
-        <Card sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
-                {article.map((article) => (
-                    <Card key={article.id} sx={{ maxWidth: 600, mx: 'auto', mt: 3, p: 2 }}>
-                        <CardContent>
-                            <Typography variant="h5" component="div" gutterBottom>
-                                {article.titre || 'Untitled Article'}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {article.description || 'No description available.'}
-                            </Typography>
-                            <Typography variant="overline" display="block" gutterBottom>
-                                Published on: {article.publicationDate}
-                            </Typography>
-                            {article.authorIds.length > 0 ?
-                                <Typography variant="caption" display="block" gutterBottom>
-                                    Author IDs: {article.authorIds.join(', ')}
-                                </Typography>
-                                : <Typography variant="caption" display="block" gutterBottom>
-                                    No authors listed.
-                                </Typography>
-                            }
-                        </CardContent>
-                    </Card>
-                ))}
+        <Container maxWidth="lg">
+            <Box my={4}>
+                <Typography variant="h5" gutterBottom>
+                    Explore Articles
+                </Typography>
+                <FilterControls
+                    equipes={equipes}
+                    professeurs={professeurs}
+                    selectedEquipe={selectedEquipe}
+                    selectedProfesseur={selectedProfesseur}
+                    titreFilter={titreFilter}
+                    handleFilterChange={handleFilterChange}
+                />
+                {loading ? (
+                    <CircularProgress />
+                ) : (
+                    <FeaturedArticles
+                        articles={displayedArticles}
+                        handleArticleClick={handleArticleClick}
+                        selectedArticle={selectedArticle}
+                        authorDetails={authorDetails}
+                        openDialog={openDialog}
+                        handleCloseDialog={handleCloseDialog}
+                    />
+                )}
             </Box>
-        </Card>
+        </Container>
     );
-};
+}
 
-export default ArticleDisplay;
+export default AllArticle;

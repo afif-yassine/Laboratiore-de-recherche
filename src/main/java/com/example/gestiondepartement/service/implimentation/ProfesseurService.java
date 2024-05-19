@@ -36,4 +36,6 @@ public interface ProfesseurService {
     List<DoctorantDTO> DoctoransOfProfesseur(long id);
 
     List<ProfesseurDTO> getBureau();
+
+    List<ProfesseurDTO> allProfNoPA();
 }

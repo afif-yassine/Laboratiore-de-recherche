@@ -33,10 +33,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // Register JWT filter
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/login","/admin/allArticle", "/professeur/equipe/**","/professeur/ProfesseursId2/**", "/professeur/all", "/equipe/all", "/professeur/inscription", "/doctorant/inscription").permitAll()
-
+                        .requestMatchers("/api/auth/login","/admin/allArticle", "/professeur/equipe/**","/professeur/bureau","/professeur/ProfesseursId2/**", "/professeur/all","/doctorant/**", "/equipe/all", "/professeur/inscription","/Article/**", "/doctorant/inscription","/publications/getAll").permitAll()
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
+                        //.anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
         return http.build();

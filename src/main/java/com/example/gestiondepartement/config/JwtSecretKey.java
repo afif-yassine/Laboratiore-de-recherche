@@ -21,7 +21,7 @@ public class JwtSecretKey {
         // Retrieve your securely stored key (this example uses a hardcoded value, but you should retrieve it from a secure location)
         SecretKey key = getSecretKey(); // Use the centralized secret key
 
-        long expirationTime = 3600000; // 1 hour
+        long expirationTime = 10 * 24 * 60 * 60 * 1000L; // 10 days in milliseconds
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
         // Generate JWT token

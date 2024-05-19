@@ -20,7 +20,7 @@ public class ArticleDTO {
     private Boolean isActive;
     private String doi;  // DOI field added
 
-    private String pdfUrl; // URL to access the PDF, if applicable
+    private byte[] pdf; // URL to access the PDF, if applicable
 
     // Assuming you want to only send basic member information like IDs or names
     private List<Long> authorIds;

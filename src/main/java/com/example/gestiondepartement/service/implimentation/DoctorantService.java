@@ -12,7 +12,7 @@ public interface DoctorantService {
     List<DoctorantDTO> getAllDoctorant();
     DoctorantDTO  insertDoctorantInDataBase(DoctorantDTO doctorantDTO);
 
-    String removeDoctorant(Long id);
+    void removeDoctorant(Long id);
 
     ProfesseurDTO getEncadrantDeDoctorant(Long id);
 

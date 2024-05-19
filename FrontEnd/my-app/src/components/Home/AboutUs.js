@@ -33,7 +33,7 @@ const AboutUs = () => {
             {/* Hero section with large background image */}
             <Box
                 sx={{
-                    backgroundImage: `url(${process.env.PUBLIC_URL + '/images/b.jpeg'})`,
+                    backgroundImage: `url(${process.env.PUBLIC_URL + '/images/hero.png'})`,
                     padding: '12rem 0',
                     color: 'white',
                     textAlign: 'center',
@@ -79,7 +79,7 @@ const AboutUs = () => {
                             <CardMedia
                                 component="img"
                                 height="auto"
-                                image={`${process.env.PUBLIC_URL + '/images/chercheurs.png'}`} // Ensure you have a suitable image
+                                image={`${process.env.PUBLIC_URL + '/images/Departement.JPG'}`} // Ensure you have a suitable image
                                 alt="Lab Activities"
                             />
                         </Card>

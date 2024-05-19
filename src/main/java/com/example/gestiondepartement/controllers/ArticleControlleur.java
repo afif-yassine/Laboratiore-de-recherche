@@ -6,7 +6,9 @@ import com.example.gestiondepartement.service.implimentation.ArticleService;
 import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -17,14 +19,16 @@ public class ArticleControlleur {
     @Autowired
     ArticleService articleService;
 
-    @PostMapping("/create")
-    public ArticleDTO createArticle(@RequestBody ArticleDTO articleDTO) {
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+    public ArticleDTO createArticle(@RequestPart("article") ArticleDTO articleDTO, @RequestPart("file") MultipartFile file) throws IOException {
+        articleDTO.setPdf(file.getBytes());
         return articleService.createArticle(articleDTO);
-
     }
 
     @PutMapping("/update")
-    public ArticleDTO updateArticle(@RequestBody ArticleDTO articleDTO){
+    public ArticleDTO updateArticle(@RequestPart("article") ArticleDTO articleDTO,
+                                    @RequestPart("file") MultipartFile file) {
+        // Handle the file upload and update the article with the service
         return articleService.updateArticle(articleDTO);
     }
 
@@ -33,9 +37,9 @@ public class ArticleControlleur {
 //        return articleService.ParticiperArticle(articleDTO);
 //
 //    }
-    @GetMapping("/Admin/AllArticleNoValide")
-    public List<ArticleDTO> AllArticleNoValide() {
-        return articleService.AllArticleNoValide();
+    @GetMapping("/notification/AllArticleFiveDays")
+    public List<ArticleDTO> AllArticleFiveDays() {
+        return articleService.AllArticleFiveDays();
     }
 
     @GetMapping("/MesArticles/{id}")
@@ -46,5 +50,11 @@ public class ArticleControlleur {
     @GetMapping("/AllArticlesOfDashProf")
     public List<ArticleDTO> AllArticlesOfDashProf() {
         return articleService.AllArticlesOfDashProf();
+    }
+
+
+    @GetMapping("/getArticlesByEquipeId/{id}")
+    public List<ArticleDTO> getArticlesByEquipeId(@PathVariable(name = "id")Long id) {
+        return articleService.getArticlesByEquipeId(id);
     }
 }

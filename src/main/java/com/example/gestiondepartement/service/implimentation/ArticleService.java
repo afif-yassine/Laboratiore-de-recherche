@@ -10,13 +10,15 @@ import java.util.List;
 public interface ArticleService {
     ArticleDTO createArticle(ArticleDTO articleDTO);
 
-    List<ArticleDTO> AllArticleNoValide();
+    List<ArticleDTO> AllArticleFiveDays();
 
-    List<ArticleDTO> NoActiveArticle();
+    List<ArticleDTO> allArticle();
 
     List<ArticleDTO> MesArticles(Long id);
 
     List<ArticleDTO> AllArticlesOfDashProf();
 
     ArticleDTO updateArticle(ArticleDTO articleDTO);
+
+    List<ArticleDTO> getArticlesByEquipeId(Long equipeId);
 }

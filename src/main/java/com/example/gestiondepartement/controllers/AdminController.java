@@ -50,7 +50,7 @@ public class AdminController {
 
     @GetMapping("/allArticle")
     public List<ArticleDTO> NoActiveArticle(){
-        return articleService.NoActiveArticle();
+        return articleService.allArticle();
     }
 
     @GetMapping("/NoValideDoctoran")
@@ -101,5 +101,8 @@ public class AdminController {
     public void refuseDoctorant(@PathVariable("DoctorantID")Long DoctorantID){
         inscriptiondoctorantService.refuseDoctorant(DoctorantID);
     }
+
+
+
 
 }

@@ -33,7 +33,7 @@ public class Article {
 
     // PDF field as a byte array
     @Lob  // Specifies that the database should treat this as a Large Object
-    @Column(name = "pdf")
+    @Column(name = "pdf", columnDefinition="bytea")
     private byte[] pdf;
 
     @ManyToOne

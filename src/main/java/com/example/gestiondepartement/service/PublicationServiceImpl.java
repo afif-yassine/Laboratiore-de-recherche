@@ -1,42 +1,60 @@
 package com.example.gestiondepartement.service;
-import com.example.gestiondepartement.dao.Article;
 import com.example.gestiondepartement.dao.Publication;
-import com.example.gestiondepartement.dao.repository.ArticleRepository;
 import com.example.gestiondepartement.dao.repository.PublicationRepository;
 import com.example.gestiondepartement.mappers.PublicationMapper;
 import com.example.gestiondepartement.rest.PublicationDTO;
 import com.example.gestiondepartement.service.implimentation.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
 
     @Autowired
-    private PublicationRepository publicationRepository;
-    @Autowired
-    private ArticleRepository articleRepository;
+    private PublicationRepository publicationRepository;  // Assume you have a repository
+
     @Autowired
     private PublicationMapper publicationMapper;
 
-
+    @Override
     public PublicationDTO createPublication(PublicationDTO publicationDTO) {
-        // Convert DTO to entity using MapStruct
         Publication publication = publicationMapper.publicationDTOToPublication(publicationDTO);
-
-         Article article = articleRepository.findById(publicationDTO.getArticleId()).get();
-         publication.setArticle(article);
-
-        // Save the publication entity
-        publicationRepository.save(publication);
-
-        // Convert the saved entity back to DTO
-        PublicationDTO savedPublicationDTO = publicationMapper.publicationToPublicationDTO(publication);
-
-        // Return the saved publication DTO
-        return savedPublicationDTO;
+        publication = publicationRepository.save(publication);
+        return publicationMapper.publicationToPublicationDTO(publication);
     }
+
+    @Override
+    public PublicationDTO updatePublication(Long id, PublicationDTO publicationDTO) {
+        Publication existingPublication = publicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Publication not found with id " + id));
+        existingPublication.setContent(publicationDTO.getContent());
+        existingPublication.setDatepublished(publicationDTO.getDatePublished());
+        existingPublication.setPhoto(publicationMapper.decodePhoto(publicationDTO.getPhotoBase64()));
+        existingPublication.setLocal(publicationDTO.getLocal());
+        existingPublication = publicationRepository.save(existingPublication);
+        return publicationMapper.publicationToPublicationDTO(existingPublication);
+
+    }
+
+    @Override
+    public void deletePublication(Long id) {
+        publicationRepository.deleteById(id);
+    }
+
+    @Override
+    public PublicationDTO getPublicationById(Long id) {
+        Publication publication = publicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Publication not found with id " + id));
+        return publicationMapper.publicationToPublicationDTO(publication);
+    }
+
+    @Override
+    public List<PublicationDTO> getAllPublications() {
+        List<Publication> publications = publicationRepository.findAll();
+        return publications.stream()
+                .map(publicationMapper::publicationToPublicationDTO)
+                .collect(Collectors.toList());    }
 }

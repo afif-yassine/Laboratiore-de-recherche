@@ -83,10 +83,9 @@ public class DoctorantServiceImpl implements DoctorantService {
     }
 
     @Override
-    public String removeDoctorant(Long id) {
+    public void removeDoctorant(Long id) {
         DoctorantDTO doctorantDTO = DoctorantMapper.toDoctorantDTO(doctorantRepository.findById(id).get());
         doctorantRepository.deleteById(id);
-        return doctorantDTO.getPrenom()+" "+doctorantDTO.getNom()+" is Deleted Successfully" ;
     }
 
     @Override

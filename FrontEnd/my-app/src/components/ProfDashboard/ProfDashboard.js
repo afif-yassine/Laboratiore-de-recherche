@@ -36,6 +36,8 @@ import Chat from "./Chat/Chat";
 import DoctorantSignUpRequests from './NotificationProf/DoctorantSignUpRequests';
 import ProfileProfSettings from "./ProfileProfSettings/ProfileProfSettings";
 import HandleLogout from "../login/Logout";
+import AllArticle from "./Articles/AllArticle";
+import ArticleDisplay from "./Articles/ArticleDisplay";
 
 
 const drawerWidth = 240;
@@ -72,9 +74,9 @@ const ProfDashboard = () => {
             case 'CreateArticle':
                 return <Articles/>;
             case 'AllArticles':
-                return <Typography variant="body2">Announcements Content</Typography>;
+                return <AllArticle/>;
             case 'MyArticles':
-                return <Typography variant="body2">Announcements Content</Typography>;
+                return <ArticleDisplay/>;
             case 'Logout':
                 return <HandleLogout/>;
             default:

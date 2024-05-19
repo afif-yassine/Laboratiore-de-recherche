@@ -16,6 +16,7 @@ import ProfDashboard from "./ProfDashboard/ProfDashboard";
 import {jwtDecode} from "jwt-decode";
 import DoctorantDashboard from "./DoctorantDashboard/DoctorantDashboard";
 import ProductionScientifique from "./Home/ProductionScientifique"; // Corrected import statement
+import PublicationList from "./Home/PublicationList";
 
 function App() {
     //const isAuthenticated = localStorage.getItem('token');
@@ -91,6 +92,7 @@ function App() {
                     <Route path="/about-us" element={<AboutUs />} />
                     <Route path="/productionScientifique" element={<ProductionScientifique />} />
                     <Route path="/team" element={<TeamPage />} />
+                    <Route path="/news" element={<PublicationList />} />
                     <Route path="/contact" element={<ContactUs />} />
                     <Route path="/signup" element={<RegistrationForm />} />
                     <Route path="/login" element={<SignIn />} />

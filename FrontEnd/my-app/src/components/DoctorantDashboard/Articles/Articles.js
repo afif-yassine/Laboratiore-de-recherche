@@ -64,15 +64,18 @@ const Articles = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const articleData = {
+            titre: title,
+            description: content,
+            publicationDate: new Date().toISOString(), // ISO string for better compatibility
+            isActive: isActive,
+            publisher: parseInt(getID()), // Ensure conversion to integer
+            authorIds: professeurIds.concat(doctorantIds).map(id => parseInt(id)) // Ensure all IDs are integers
+        };
+
         const formData = new FormData();
-        formData.append('titre', title);
-        formData.append('description', content);
-        formData.append('publicationDate', new Date());
-        formData.append('isActive', isActive);
-        formData.append('publisher', getID());
-        formData.append('pdf', pdfFile);
-        professeurIds.forEach(id => formData.append('authorIds', id));
-        doctorantIds.forEach(id => formData.append('authorIds', id));
+        formData.append('article', new Blob([JSON.stringify(articleData)], { type: 'application/json' }));
+        formData.append('file', pdfFile);
 
         axiosInstance.post('http://localhost:8080/Article/create', formData, {
             headers: {
@@ -88,20 +91,16 @@ const Articles = () => {
                 setProfesseurIds([]);
                 setDoctorantIds([]);
                 setIsActive(false);
-                setPublisher(getID());
                 setPdfFile(null);
             })
             .catch(error => {
-                if (error.response && error.response.status === 401) {
-                    localStorage.removeItem('token');
-                    window.location.href = '/login';
-                }
                 console.error('Failed to create article:', error);
                 setSnackbarMessage('Failed to create article.');
                 setSnackbarSeverity('error');
                 setOpenSnackbar(true);
             });
     };
+
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
