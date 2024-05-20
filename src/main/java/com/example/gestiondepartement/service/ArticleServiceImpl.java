@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
-    @Autowired
-    private ArticleMapper articleMapper;
+    ArticleMapper articleMapper = new ArticleMapper();
+
     @Autowired
     private MemberRepository memberRepository;
     @Override

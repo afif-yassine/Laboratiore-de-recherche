@@ -11,6 +11,6 @@ public class PublicationDTO {
     private Long id;
     private String content;
     private LocalDate datePublished;
-    private String photoBase64;  // Using Base64-encoded string for photo to simplify transfer over JSON
+    private byte[] photo;  // Using Base64-encoded string for photo to simplify transfer over JSON
     private String local;
 }

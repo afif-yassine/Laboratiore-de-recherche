@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from "../../login/interceptor";
 import { Box, Button, Typography, TextField, Paper, Snackbar } from '@mui/material';
 import { Autocomplete } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
-import axiosInstance from "../../login/interceptor";
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,7 +30,6 @@ const Articles = () => {
     const [doctorantIds, setDoctorantIds] = useState([]);
     const [professeurs, setProfesseurs] = useState([]);
     const [doctorants, setDoctorants] = useState([]);
-    const [publisher, setPublisher] = useState(null);
     const [isActive, setIsActive] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -67,10 +65,10 @@ const Articles = () => {
         const articleData = {
             titre: title,
             description: content,
-            publicationDate: new Date().toISOString(), // ISO string for better compatibility
+            publicationDate: new Date().toISOString(),
             isActive: isActive,
-            publisher: parseInt(getID()), // Ensure conversion to integer
-            authorIds: professeurIds.concat(doctorantIds).map(id => parseInt(id)) // Ensure all IDs are integers
+            publisher: parseInt(getID()),
+            authorIds: professeurIds.concat(doctorantIds).map(id => id.id)
         };
 
         const formData = new FormData();
@@ -100,7 +98,6 @@ const Articles = () => {
                 setOpenSnackbar(true);
             });
     };
-
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {

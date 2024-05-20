@@ -1,4 +1,5 @@
 package com.example.gestiondepartement.service;
+
 import com.example.gestiondepartement.dao.Publication;
 import com.example.gestiondepartement.dao.repository.PublicationRepository;
 import com.example.gestiondepartement.mappers.PublicationMapper;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class PublicationServiceImpl implements PublicationService {
 
     @Autowired
-    private PublicationRepository publicationRepository;  // Assume you have a repository
+    private PublicationRepository publicationRepository;
 
     @Autowired
     private PublicationMapper publicationMapper;
@@ -30,13 +31,14 @@ public class PublicationServiceImpl implements PublicationService {
     public PublicationDTO updatePublication(Long id, PublicationDTO publicationDTO) {
         Publication existingPublication = publicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publication not found with id " + id));
+
         existingPublication.setContent(publicationDTO.getContent());
         existingPublication.setDatepublished(publicationDTO.getDatePublished());
-        existingPublication.setPhoto(publicationMapper.decodePhoto(publicationDTO.getPhotoBase64()));
+        existingPublication.setPhoto(publicationDTO.getPhoto());  // Directly using byte[] photo
         existingPublication.setLocal(publicationDTO.getLocal());
+
         existingPublication = publicationRepository.save(existingPublication);
         return publicationMapper.publicationToPublicationDTO(existingPublication);
-
     }
 
     @Override
@@ -56,5 +58,6 @@ public class PublicationServiceImpl implements PublicationService {
         List<Publication> publications = publicationRepository.findAll();
         return publications.stream()
                 .map(publicationMapper::publicationToPublicationDTO)
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
 }

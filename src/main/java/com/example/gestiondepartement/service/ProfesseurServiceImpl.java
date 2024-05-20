@@ -1,11 +1,8 @@
 package com.example.gestiondepartement.service;
 
 
-import com.example.gestiondepartement.dao.Doctorant;
-import com.example.gestiondepartement.dao.repository.DoctorantRepository;
-import com.example.gestiondepartement.dao.repository.EquipeRepository;
-import com.example.gestiondepartement.dao.Professeur;
-import com.example.gestiondepartement.dao.repository.ProfesseurRepository;
+import com.example.gestiondepartement.dao.*;
+import com.example.gestiondepartement.dao.repository.*;
 import com.example.gestiondepartement.mappers.DoctorantMapper;
 import com.example.gestiondepartement.mappers.ProfesseurMapper;
 import com.example.gestiondepartement.mappers.ProfesseurSearchDTOMapper;
@@ -14,6 +11,7 @@ import com.example.gestiondepartement.rest.ProfesseurDTO;
 import com.example.gestiondepartement.rest.ProfesseurSearchDTO;
 import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import com.example.gestiondepartement.service.implimentation.ProfesseurService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +43,14 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     @Autowired
     private InscriptiondoctorantService inscriptiondoctorantService;
 
+    @Autowired
+    private ChangementEquipeRepository changementEquipeRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     private void registerWithChatEngine(ProfesseurDTO professeurDTO) {
         RestTemplate restTemplate = new RestTemplate();
@@ -77,9 +83,45 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     }
 
     @Override
+    @Transactional
     public void deletProfesseur(Long membreid) {
-        Professeur professeur = professeurRepository.findById(membreid).get();
-        ProfesseurDTO professeurDTO = ProfesseurMapper.toProfesseurDTO(professeur);
+        Professeur professeur = professeurRepository.findById(membreid).orElseThrow(() -> new RuntimeException("Professeur not found"));
+
+
+        // Handle ChangementEquipe
+        List<ChangementEquipe> changements = changementEquipeRepository.findByProf(professeur);
+        for (ChangementEquipe changement : changements) {
+            changement.setProf(null); // Or set it to a default value
+            changementEquipeRepository.save(changement);
+        }
+
+        // Handle Equipe
+        Equipe equipe = equipeRepository.findByChefequipe(professeur);
+        if (equipe != null) {
+            equipe.setChefequipe(null); // Or set it to a default value
+            equipeRepository.save(equipe);
+        }
+
+        // Handle Articles
+        List<Article> articles = articleRepository.findByPublisher(professeur);
+        for (Article article : articles) {
+            article.setPublisher(null); // Or set it to a default value
+            articleRepository.save(article);
+        }
+
+
+        List<Doctorant> doctorants = doctorantRepository.findByEncadrantOrCoEncadrant(professeur, professeur);
+        for (Doctorant doctorant : doctorants) {
+            if (doctorant.getEncadrant().equals(professeur)) {
+                doctorant.setEncadrant(null); // Or set it to a default value
+            }
+            if (doctorant.getCoEncadrant().equals(professeur)) {
+                doctorant.setCoEncadrant(null); // Or set it to a default value
+            }
+            doctorantRepository.save(doctorant);
+        }
+
+        // Finally, delete the Professeur
         professeurRepository.deleteById(membreid);
     }
 
@@ -164,7 +206,7 @@ public class ProfesseurServiceImpl implements ProfesseurService {
 
     @Override
     public List<ProfesseurDTO> getBureau() {
-        List<Professeur> professeurs = professeurRepository.findAllByIsadminTrueAndIschefTrue();
+        List<Professeur> professeurs = professeurRepository.findAllByIsadminTrueOrIschefTrue();
         return professeurs.stream().map(ProfesseurMapper::toProfesseurDTO).toList();
     }
 

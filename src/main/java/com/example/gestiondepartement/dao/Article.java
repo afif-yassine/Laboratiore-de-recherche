@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.descriptor.jdbc.BinaryJdbcType;
 
 import java.util.Date;
 import java.util.List;
@@ -32,8 +34,7 @@ public class Article {
     private String doi;
 
     // PDF field as a byte array
-    @Lob  // Specifies that the database should treat this as a Large Object
-    @Column(name = "pdf", columnDefinition="bytea")
+    @Column(name = "pdf",columnDefinition = "bytea")
     private byte[] pdf;
 
     @ManyToOne

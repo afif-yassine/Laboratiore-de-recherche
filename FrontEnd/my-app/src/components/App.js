@@ -16,7 +16,7 @@ import ProfDashboard from "./ProfDashboard/ProfDashboard";
 import {jwtDecode} from "jwt-decode";
 import DoctorantDashboard from "./DoctorantDashboard/DoctorantDashboard";
 import ProductionScientifique from "./Home/ProductionScientifique"; // Corrected import statement
-import PublicationList from "./Home/PublicationList";
+import PublicationList from "./Home/Actualite";
 
 function App() {
     //const isAuthenticated = localStorage.getItem('token');

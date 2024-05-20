@@ -22,17 +22,15 @@ const ActionButtonsContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    // Add spacing between buttons if needed
     '& > * + *': {
         marginLeft: theme.spacing(2),
     },
 }));
 
-const HeaderLogo = styled(Typography)({
+const HeaderLogo = styled('img')({
     flexGrow: 1,
-    fontWeight: 900,
-    color: theme.palette.primary.main,
-    textAlign: 'left',
+    maxHeight: '40px', // Adjust the height as needed
+    cursor: 'pointer',
 });
 
 const ActionButton = styled(Button)({
@@ -80,10 +78,8 @@ const Header = () => {
         <AppBar position="fixed" elevation={0} sx={{ bgcolor: 'background.default' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <StyledRouterLink to="/">
-                        <HeaderLogo variant="h6" noWrap>
-                            LabFsa
-                        </HeaderLogo>
+                    <StyledRouterLink to="/about-us">
+                        <HeaderLogo src="/images/logo.png" alt="Lab Logo" />
                     </StyledRouterLink>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: 'center' }}>
                         {navigationItems.map((item) => (
@@ -93,7 +89,6 @@ const Header = () => {
                         ))}
                     </Box>
                     <Toolbar disableGutters>
-                        {/* ... (left side elements) */}
                         <ActionButtonsContainer sx={{ flexGrow: 0 }}>
                             <StyledRouterLink to="/login" style={{ textDecoration: 'none' }}>
                                 <ActionButton>Login</ActionButton>

@@ -16,4 +16,5 @@ public interface DoctorantRepository extends JpaRepository<Doctorant,Long> {
     Doctorant findByEmail(String email);
 
 
+    List<Doctorant> findByEncadrantOrCoEncadrant(Professeur professeur, Professeur professeur1);
 }

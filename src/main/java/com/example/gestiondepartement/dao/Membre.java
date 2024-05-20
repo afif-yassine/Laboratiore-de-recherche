@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Membre")
 @Entity
@@ -33,6 +35,7 @@ public abstract class Membre {
     private String prenom ;
     private String email ;
     private String numero ;
+
     public Membre() {
     }
 

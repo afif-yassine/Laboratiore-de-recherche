@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography, styled, Box } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, styled } from '@mui/material';
 
 const StyledCard = styled(Card)(({ theme, selected }) => ({
     maxWidth: 345,
@@ -17,13 +17,13 @@ const StyledCardContent = styled(CardContent)(({ theme }) => ({
     paddingBottom: `${theme.spacing(2)}px !important`,
 }));
 
-const TeamMemberCard = ({ member, onClick, selected }) => {
+const TeamMemberCard = ({ member, onClick, selected, icon }) => {
     return (
         <StyledCard onClick={() => onClick(member.id)} selected={selected}>
             <CardMedia
                 component="img"
                 height="140"
-                image={member.imageUrl || "/images/chercheurs.png"}
+                image={member.imageUrl || "https://source.unsplash.com/random/?team"}
                 alt={member.nom}
             />
             <StyledCardContent>
@@ -36,6 +36,7 @@ const TeamMemberCard = ({ member, onClick, selected }) => {
                 <Typography variant="body2">
                     {member.description}
                 </Typography>
+                {icon}
             </StyledCardContent>
         </StyledCard>
     );

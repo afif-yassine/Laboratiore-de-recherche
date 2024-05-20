@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, Typography, CircularProgress, CardMedia, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Typography, CircularProgress, CardMedia, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Snackbar } from '@mui/material';
+import { Autocomplete } from '@mui/lab';
+import MuiAlert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
-import { jwtDecode } from "jwt-decode";
 import axiosInstance from "../../login/interceptor";
+import {jwtDecode} from "jwt-decode";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function getID() {
     const token = localStorage.getItem('token');
@@ -19,23 +25,32 @@ function getID() {
 
 const ArticleDisplay = ({ articleId = getID() }) => {
     const [articles, setArticles] = useState([]);
+    const [authorDetails, setAuthorDetails] = useState({});
+    const [allAuthors, setAllAuthors] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [currentArticle, setCurrentArticle] = useState(null);
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
+    const [newAuthors, setNewAuthors] = useState([]);
     const [newPDF, setNewPDF] = useState(null);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
     useEffect(() => {
         fetchArticles();
+        fetchAllAuthors();
     }, [articleId]);
 
     const fetchArticles = () => {
         setLoading(true);
         axiosInstance.get(`http://localhost:8080/Article/MesArticles/${articleId}`)
             .then(response => {
-                setArticles(response.data);
+                const articles = response.data;
+                setArticles(articles);
+                fetchAuthors(articles);
                 setLoading(false);
             })
             .catch(error => {
@@ -45,36 +60,81 @@ const ArticleDisplay = ({ articleId = getID() }) => {
             });
     };
 
+    const fetchAllAuthors = () => {
+        axiosInstance.get('http://localhost:8080/professeur/all')
+            .then(response => {
+                setAllAuthors(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching all authors:', error);
+            });
+    };
+
+    const fetchAuthors = async (articles) => {
+        const authorIds = [...new Set(articles.flatMap(article => article.authorIds))];
+        const authorDetails = {};
+        await Promise.all(authorIds.map(async id => {
+            const response = await axiosInstance.get(`http://localhost:8080/professeur/ProfesseursId2/${id}`);
+            authorDetails[id] = response.data;
+        }));
+        setAuthorDetails(authorDetails);
+    };
+
     const handleOpenEditDialog = (article) => {
         setCurrentArticle(article);
         setNewTitle(article.titre);
         setNewDescription(article.description);
+        setNewAuthors(article.authorIds.map(id => authorDetails[id]).filter(Boolean)); // Ensure it maps to author objects
         setEditDialogOpen(true);
     };
 
     const handleUpdateArticle = () => {
-        const formData = new FormData();
-        formData.append("id", currentArticle.id);
-        formData.append("titre", newTitle);
-        formData.append("description", newDescription);
-        if (newPDF) formData.append("pdf", newPDF);
+        const authorIds = newAuthors.map(author => author.id);
 
-        axiosInstance.put('http://localhost:8080/Article/update', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(response => {
-            const updatedArticles = articles.map(art => art.id === response.data.id ? response.data : art);
-            setArticles(updatedArticles);
-            setEditDialogOpen(false);
-        }).catch(error => {
-            console.error('Error updating article:', error);
-            setError(error.toString());
-        });
+        const formData = new FormData();
+        formData.append("article", new Blob([JSON.stringify({
+            id: currentArticle.id,
+            titre: newTitle,
+            description: newDescription,
+            authorIds: authorIds,
+            publisher: currentArticle.publisher  // Ensure the publisher is included
+        })], {
+            type: "application/json"
+        }));
+        if (newPDF) formData.append("file", newPDF);
+
+        const headers = newPDF ? { 'Content-Type': 'multipart/form-data' } : {};
+
+        axiosInstance.put('http://localhost:8080/Article/update', formData, { headers })
+            .then(response => {
+                const updatedArticles = articles.map(art => art.id === response.data.id ? response.data : art);
+                setArticles(updatedArticles);
+                setEditDialogOpen(false);
+                setSnackbarMessage('Article updated successfully!');
+                setSnackbarSeverity('success');
+                setOpenSnackbar(true);
+            })
+            .catch(error => {
+                console.error('Error updating article:', error);
+                setSnackbarMessage('Failed to update article.');
+                setSnackbarSeverity('error');
+                setOpenSnackbar(true);
+            });
     };
 
     const handlePDFUpload = event => {
         setNewPDF(event.target.files[0]);
+    };
+
+    const handleAuthorsChange = (event, newValue) => {
+        setNewAuthors(newValue);
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
     };
 
     if (isLoading) return <CircularProgress />;
@@ -100,6 +160,9 @@ const ArticleDisplay = ({ articleId = getID() }) => {
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {article.description}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Authors: {article.authorIds.map(id => authorDetails[id]?.name).join(', ')}
                         </Typography>
                         <IconButton onClick={() => handleOpenEditDialog(article)}>
                             <EditIcon />
@@ -133,6 +196,22 @@ const ArticleDisplay = ({ articleId = getID() }) => {
                             value={newDescription}
                             onChange={e => setNewDescription(e.target.value)}
                         />
+                        <Autocomplete
+                            multiple
+                            options={allAuthors}
+                            getOptionLabel={(option) => option.nom}
+                            value={newAuthors}
+                            onChange={handleAuthorsChange}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    label="Authors"
+                                    placeholder="Select authors"
+                                />
+                            )}
+                            sx={{ mt: 2, mb: 2 }}
+                        />
                         <Button
                             variant="contained"
                             component="label"
@@ -152,6 +231,11 @@ const ArticleDisplay = ({ articleId = getID() }) => {
                     </DialogActions>
                 </Dialog>
             )}
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

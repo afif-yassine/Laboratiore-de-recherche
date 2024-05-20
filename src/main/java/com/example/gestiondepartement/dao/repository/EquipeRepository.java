@@ -1,6 +1,7 @@
 package com.example.gestiondepartement.dao.repository;
 
 import com.example.gestiondepartement.dao.Equipe;
+import com.example.gestiondepartement.dao.Professeur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 
 
-
+    Equipe findByChefequipe(Professeur professeur);
 }

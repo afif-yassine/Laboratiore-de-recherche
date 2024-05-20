@@ -18,7 +18,7 @@ public class Publication {
 
     private LocalDate datepublished;
 
-    @Lob
+    @Column(name = "photo",columnDefinition = "bytea")
     private byte[] photo;
 
     private String local;

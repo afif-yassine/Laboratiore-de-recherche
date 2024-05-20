@@ -67,11 +67,7 @@ const AboutUs = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Typography paragraph>
-                            Founded in [Year], our laboratory at Faculté des Sciences, Ibn Zohr University has become a
-                            beacon of innovation and research excellence. We specialize in cutting-edge areas like
-                            artificial intelligence, cybersecurity, and computational biology, contributing globally
-                            recognized research.
-                        </Typography>
+                            The Systems and Computer Vision Laboratory (LabSIV) at Ibn Zohr University in Agadir focuses on research in mathematics and computer science. It's part of the Faculty of Sciences and the Ibn Zohr Doctoral Studies Center. The lab, led by Professor K. AFDEL, explores advanced areas in computer vision and systems, contributing significantly to the academic and practical understanding of these fields                        </Typography>
                         <Button variant="contained" color="primary" href="http://www.fsa.ac.ma/">Learn More</Button>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -148,21 +144,26 @@ const AboutUs = () => {
             </Box>
 
             {/* Our Team with images */}
-            <Container maxWidth="lg" sx={{py: 4}}>
+            <Container maxWidth="lg" sx={{ py: 4 }}>
                 <Typography variant="h4" gutterBottom>Research Focus</Typography>
                 <Grid container spacing={2}>
                     {teams.map((team) => (
                         <Grid item xs={12} sm={6} md={4} key={team.id}>
-                            <Card>
+                            <Card sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.05)' } }}>
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={process.env.PUBLIC_URL + '/images/chercheurs.png'} // Update with actual team member photos
+                                    image={team.imageUrl || `https://source.unsplash.com/random/?programation,${team.axederecherche}`}
                                     alt={team.axederecherche}
+                                    sx={{ objectFit: 'cover' }}
                                 />
-                                <CardContent>
-                                    <Typography variant="h5" sx={{fontWeight: 'bold'}}>{team.nom}</Typography>
-                                    <Typography variant="subtitle1">{team.axederecherche}</Typography>
+                                <CardContent sx={{ textAlign: 'center' }}>
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                        {team.axederecherche}
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ color: 'text.secondary', mb: 1 }}>
+                                        By Equipe : {team.nom}
+                                    </Typography>
                                     <Typography>{team.description}</Typography>
                                 </CardContent>
                             </Card>

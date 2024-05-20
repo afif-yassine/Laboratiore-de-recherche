@@ -86,7 +86,7 @@ const ProfileSettings = ({ professorId = getID() }) => {
             <Paper elevation={6} sx={{ p: theme.spacing(4), display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing(2) }}>
                 <Avatar
                     sx={{ bgcolor: theme.palette.secondary.main, width: 120, height: 120 }}
-                    src="https://via.placeholder.com/150" // Placeholder or actual image URL
+                    src={process.env.PUBLIC_URL + '/images/profile.png'} // Placeholder or actual image URL
                     alt={`${professorDetails.nom} ${professorDetails.prenom}`}
                 />
                 <Typography variant="h4" component="h1" gutterBottom>

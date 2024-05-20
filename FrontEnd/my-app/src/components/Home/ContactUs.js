@@ -75,13 +75,13 @@ const ContactUs = () => {
                             Informations de contact
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                            <PhoneIcon sx={{ mr: 1 }} /> +123 456 7890
+                            <PhoneIcon sx={{ mr: 1 }} /> +212 698 75 68 41
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                            <EmailIcon sx={{ mr: 1 }} /> contact@example.com
+                            <EmailIcon sx={{ mr: 1 }} /> labsive@uiz.ac.com
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                            <LocationOnIcon sx={{ mr: 1 }} /> 123 Example Street, City
+                            <LocationOnIcon sx={{ mr: 1 }} /> B.P 8106, Agadir 80000
                         </Box>
                         {/* Here you can add a map or image */}
                         <Box sx={{ mt: 3 }}>

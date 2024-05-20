@@ -29,7 +29,7 @@ function FeaturedArticles({ articles, handleArticleClick, selectedArticle, openD
                             <CardMedia
                                 component="img"
                                 sx={{ height: 160 }}
-                                image={`https://source.unsplash.com/random/?science,${article.titre}`}
+                                image={`https://source.unsplash.com/random/?programation,${article.titre}`}
                                 alt="Article Image"
                             />
                             <CardContent sx={{ flexGrow: 1 }}>

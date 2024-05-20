@@ -3,8 +3,11 @@ package com.example.gestiondepartement.dao;
 import com.example.gestiondepartement.dao.Equipe;
 import com.example.gestiondepartement.dao.Membre;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "Professeur")
