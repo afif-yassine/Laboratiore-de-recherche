@@ -11,8 +11,10 @@ import java.util.List;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Membre, Long> {
-    Membre findMembreById(Long id);
+
     @Query("SELECT m FROM Membre m WHERE m.id IN :ids")
     List<Membre> findAllByIdIn(@Param("ids") List<Long> ids);
     Membre findByEmail(String email);
+
+
 }

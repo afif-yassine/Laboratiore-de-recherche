@@ -1,12 +1,14 @@
 package com.example.gestiondepartement.controllers;
 
 import com.example.gestiondepartement.dao.Article;
+import com.example.gestiondepartement.dao.Membre;
 import com.example.gestiondepartement.rest.*;
 import com.example.gestiondepartement.service.implimentation.ArticleService;
 import com.example.gestiondepartement.service.implimentation.ChangementEquipeService;
 import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import com.example.gestiondepartement.service.implimentation.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +66,10 @@ public class AdminController {
     }
 
 
+    @GetMapping("/membre/{id}")
+    public ProfesseurSearchDTO getMembreById(@PathVariable(name = "id")Long id) {
+        return professeurService.getMembreById(id);
+    }
 
 
 

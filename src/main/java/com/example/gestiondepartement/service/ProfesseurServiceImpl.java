@@ -6,9 +6,7 @@ import com.example.gestiondepartement.dao.repository.*;
 import com.example.gestiondepartement.mappers.DoctorantMapper;
 import com.example.gestiondepartement.mappers.ProfesseurMapper;
 import com.example.gestiondepartement.mappers.ProfesseurSearchDTOMapper;
-import com.example.gestiondepartement.rest.DoctorantDTO;
-import com.example.gestiondepartement.rest.ProfesseurDTO;
-import com.example.gestiondepartement.rest.ProfesseurSearchDTO;
+import com.example.gestiondepartement.rest.*;
 import com.example.gestiondepartement.service.implimentation.InscriptiondoctorantService;
 import com.example.gestiondepartement.service.implimentation.ProfesseurService;
 import jakarta.transaction.Transactional;
@@ -47,7 +45,7 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     private ChangementEquipeRepository changementEquipeRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
+    MemberRepository memberRepository;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -214,6 +212,18 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     public List<ProfesseurDTO> allProfNoPA() {
         List<Professeur> professeurs = professeurRepository.findByStatusIn(Arrays.asList("PES", "PH", "Treasury"));
         return professeurs.stream().map(ProfesseurMapper::toProfesseurDTO).toList();
+    }
+
+    @Override
+    public ProfesseurSearchDTO getMembreById(Long id) {
+        if (id == null) {
+            return null;
+        }
+        ProfesseurSearchDTO professeurSearchDTO = new ProfesseurSearchDTO();
+        var membre =  memberRepository.findById(id).get();
+        professeurSearchDTO.setNom(membre.getNom());
+        professeurSearchDTO.setPrenom(membre.getPrenom());
+        return professeurSearchDTO;
     }
     /*------------------------------------Professeur--------------------------------------------------*/
 

@@ -20,7 +20,6 @@ import {
     Notifications,
     Forum,
     Settings,
-    Announcement,
     Publish,
     CalendarViewDaySharp,
     Article,
@@ -31,26 +30,28 @@ import {
     DeleteForever,
     SwapHoriz
 } from '@mui/icons-material';
-import theme from '../../theme/theme';
+import theme from '../../theme/theme'; // Ensure this is the correct path to your theme file
 
-// Import notification and settings components
-import DoctorantSignUpRequests from './Notifications/DoctorantSignUpRequests';
-import ProfesseurSignUpRequests from './Notifications/ProfesseurSignUpRequests';
-import ProfesseurChangeTeamRequests from './Notifications/ProfesseurChangeTeamRequests';
-import ProfileSettings from './ProfileSettings/ProfileSettings';
-import Articles from './Articles/Articles';
-import FalseActiveArticles from "./Notifications/FalseActiveArticles";
-import HandleLogout from "../login/Logout";
+import PublicationList from './Annonces/PublicationList';
+import ModifyAnnoncement from './Annonces/ModifyPublication';
 import Chat from "./Chat/Chat";
-import ArticleDisplay from "./Articles/ArticleDisplay";
-import AllArticle from "./Articles/AllArticle";
 import CreateTeam from "./Management/CreateTeam";
 import DeleteProfessor from "./Management/DeleteProfessor";
 import DeleteDoctorant from "./Management/DeleteDoctorant";
 import ChangeProfessorRole from "./Management/ChangeProfessorRole";
+import FalseActiveArticles from "./Notifications/FalseActiveArticles";
+import DoctorantSignUpRequests from "./Notifications/DoctorantSignUpRequests";
+import ProfesseurSignUpRequests from "./Notifications/ProfesseurSignUpRequests";
+import ProfesseurChangeTeamRequests from "./Notifications/ProfesseurChangeTeamRequests";
+import Articles from "./Articles/Articles";
+import ArticleDisplay from "./Articles/ArticleDisplay";
+import AllArticle from "./Articles/AllArticle";
+import HandleLogout from "../login/Logout";
 import CreatePublication from "./Annonces/CreatePublication";
-//import CreateArticle from './Articles/CreateArticle'; // Path to the component that handles article creation
-//import AllArticles from './Articles/AllArticles'; // Path to the component that lists all articles
+import PublishIcon from "@mui/icons-material/Publish";
+import ProfileSettings from "./ProfileSettings/ProfileSettings";
+
+// Import other components as needed
 
 const drawerWidth = 240;
 
@@ -59,8 +60,7 @@ const Dashboard = () => {
     const [articlesOpen, setArticlesOpen] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState('');
     const [managementOpen, setManagementOpen] = useState(false);
-
-
+    const [publicationOpen, setPublicationOpen] = useState(false);
 
     const handleClick = (menu) => {
         switch (menu) {
@@ -72,6 +72,9 @@ const Dashboard = () => {
                 break;
             case 'management':
                 setManagementOpen(!managementOpen);
+                break;
+            case 'publications':
+                setPublicationOpen(!publicationOpen);
                 break;
             default:
             // do nothing
@@ -85,19 +88,17 @@ const Dashboard = () => {
     const renderComponent = () => {
         switch (selectedComponent) {
             case 'Discussion':
-                return <Chat/>;
+                return <Chat />;
             case 'ProfileSettings':
                 return <ProfileSettings />;
             case 'CreateTeam':
-                return <CreateTeam/>;  // Placeholder, replace with actual component
+                return <CreateTeam />;
             case 'DeleteProfesseur':
-                return <DeleteProfessor />;  // Placeholder, replace with actual component
+                return <DeleteProfessor />;
             case 'DeleteDoctorant':
-                return <DeleteDoctorant />;  // Placeholder, replace with actual component
+                return <DeleteDoctorant />;
             case 'ChangeProfessorRole':
-                return <ChangeProfessorRole />;  // Placeholder, replace with actual component
-            case 'Publications':
-                return <CreatePublication/>;
+                return <ChangeProfessorRole />;
             case 'FalseActiveArticles':
                 return <FalseActiveArticles />;
             case 'DoctorantSignUpRequests':
@@ -107,13 +108,17 @@ const Dashboard = () => {
             case 'ProfesseurChangeTeamRequests':
                 return <ProfesseurChangeTeamRequests />;
             case 'CreateArticle':
-                return <Articles/>;
+                return <Articles />;
             case 'MyArticles':
                 return <ArticleDisplay/>;
             case 'AllArticles':
-                return <AllArticle/>;
+                return <AllArticle />;
             case 'Logout':
-                return <HandleLogout/>;
+                return <HandleLogout />;
+            case 'ModifyAnnoncement':
+                return <PublicationList />;
+            case 'CreatePublication':
+                return <CreatePublication />;
             default:
                 return <Typography variant="body2">Please select an item from the menu.</Typography>;
         }
@@ -199,10 +204,23 @@ const Dashboard = () => {
                                     </ListItem>
                                 </List>
                             </Collapse>
-                            <ListItem button onClick={() => handleMenuItemClick('Publications')}>
-                                <ListItemIcon><Publish /></ListItemIcon>
+                            <ListItem button onClick={() => handleClick('publications')}>
+                                <ListItemIcon><PublishIcon /></ListItemIcon>
                                 <ListItemText primary="Publications" />
+                                {publicationOpen ? <ExpandLess /> : <ExpandMore />}
                             </ListItem>
+                            <Collapse in={publicationOpen} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('CreatePublication')}>
+                                        <ListItemIcon><AddSharp /></ListItemIcon>
+                                        <ListItemText primary="Create Publication" />
+                                    </ListItem>
+                                    <ListItem button sx={{ pl: 4 }} onClick={() => handleMenuItemClick('ModifyAnnoncement')}>
+                                        <ListItemIcon><CalendarViewDaySharp /></ListItemIcon>
+                                        <ListItemText primary="Modify Annoncement" />
+                                    </ListItem>
+                                </List>
+                            </Collapse>
                             <ListItem button onClick={() => handleClick('articles')}>
                                 <ListItemIcon><LibraryBooks /></ListItemIcon>
                                 <ListItemText primary="Articles" />
@@ -248,7 +266,6 @@ const Dashboard = () => {
                     <Toolbar />
                     {renderComponent()}
                 </Box>
-
             </Box>
         </ThemeProvider>
     );

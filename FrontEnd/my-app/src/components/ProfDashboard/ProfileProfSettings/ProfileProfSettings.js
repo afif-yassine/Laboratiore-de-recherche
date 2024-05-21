@@ -1,6 +1,5 @@
 // ./ProfileDoctorantSettings/ProfileDoctorantSettings.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
     Typography, Paper, Box, CircularProgress, Avatar, Chip, Container, List, ListItem, Button, ListItemIcon, ListItemText, IconButton
 } from '@mui/material';
@@ -20,8 +19,8 @@ import UpdateProfile from './UpdateProfile'; // Make sure to import the UpdatePr
 
 // Assuming theme is configured in your project
 import theme from '../../../theme/theme';
-import axiosInstance from "../../login/interceptor";
 import {jwtDecode} from "jwt-decode";
+import axiosInstance from "../../login/interceptor";
 
 function getID() {
     const token = localStorage.getItem('token');

@@ -22,7 +22,7 @@ function getID() {
         return false;
     }
 }
-const ChangeTeamRequest = ({ profID = getID() }) => {
+const ChangeTeam = ({ profID = getID() }) => {
     const [newEquipe, setNewEquipe] = useState('');
     const [equipes, setEquipes] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -105,4 +105,4 @@ const ChangeTeamRequest = ({ profID = getID() }) => {
     );
 };
 
-export default ChangeTeamRequest;
+export default ChangeTeam;

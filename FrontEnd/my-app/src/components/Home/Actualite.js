@@ -57,7 +57,8 @@ const Actualite = () => {
         const fetchPublications = async () => {
             try {
                 const response = await axiosInstance.get('/publications/getAll');
-                setPublications(response.data);
+                const sortedPublications = response.data.sort((a, b) => new Date(b.datePublished) - new Date(a.datePublished));
+                setPublications(sortedPublications);
             } catch (error) {
                 console.error('Error fetching publications:', error);
             } finally {

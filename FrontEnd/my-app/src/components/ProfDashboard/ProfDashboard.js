@@ -20,17 +20,18 @@ import {
     ExitToApp,
     ExpandLess,
     ExpandMore,
-    LibraryBooks
+    LibraryBooks, SwapHoriz
 } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ForumIcon from '@mui/icons-material/Forum';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
 import PublishIcon from '@mui/icons-material/Publish';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme/theme';
 import Articles from './Articles/Articles';
 import Chat from "./Chat/Chat";
+import ChangeTeam from "./ChangeTeamRequest/ChangeTeam";
+import Actualite from "../Home/Actualite";
 
 // Import notification sub-components
 import DoctorantSignUpRequests from './NotificationProf/DoctorantSignUpRequests';
@@ -63,12 +64,12 @@ const ProfDashboard = () => {
         switch (selectedComponent) {
             case 'Discussion':
                 return <Chat/>;
+            case 'Annoncement':
+                return <Actualite/>;
             case 'ProfileSettings':
                 return <ProfileProfSettings />;
-            case 'Announcements':
-                return <Typography variant="body2">Announcements Content</Typography>;
-            case 'Publications':
-                return <Typography variant="body2">Publications Content</Typography>;
+            case 'ChangeTeam':
+                return <ChangeTeam/>;
             case 'DoctorantSignUpRequests':
                 return <DoctorantSignUpRequests />;
             case 'CreateArticle':
@@ -129,13 +130,13 @@ const ProfDashboard = () => {
                                 <ListItemIcon><SettingsIcon /></ListItemIcon>
                                 <ListItemText primary="Profile Settings" />
                             </ListItem>
-                            <ListItem button onClick={() => handleMenuItemClick('Announcements')}>
-                                <ListItemIcon><AnnouncementIcon /></ListItemIcon>
-                                <ListItemText primary="Announcements" />
+                            <ListItem button onClick={() => handleMenuItemClick('ChangeTeam')}>
+                                <ListItemIcon><SwapHoriz /></ListItemIcon>
+                                <ListItemText primary="Request Change Team" />
                             </ListItem>
-                            <ListItem button onClick={() => handleMenuItemClick('Publications')}>
+                            <ListItem button onClick={() => handleMenuItemClick('Annoncement')}>
                                 <ListItemIcon><PublishIcon /></ListItemIcon>
-                                <ListItemText primary="Publications" />
+                                <ListItemText primary="Annoncement" />
                             </ListItem>
 
                             {/* Articles Menu Item */}

@@ -5,7 +5,8 @@ import { Box, Typography, Button, Grid, Card, CardMedia, CardContent, CardAction
     Paper, CircularProgress, MenuItem, FormControl, InputLabel, Select, OutlinedInput,
     TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import FeaturedArticles from "../../entity/FeaturedArticles";  // Ensure the import path is correct based on your project structure
-import FilterControls from '../../entity/FilterControls';  // Ensure the import path is correct
+import FilterControls from '../../entity/FilterControls';
+import axiosInstance from "../../login/interceptor";  // Ensure the import path is correct
 
 function AllArticle() {
     const [articles, setArticles] = useState([]);
@@ -64,7 +65,7 @@ function AllArticle() {
         const authorIds = article.authorIds;
         const authors = [];
         for (const id of authorIds) {
-            const response = await axios.get(`http://localhost:8080/professeur/ProfesseursId2/${id}`);
+            const response = await axiosInstance.get(`http://localhost:8080/admin/membre/${id}`);
             authors.push(response.data);
         }
         setAuthorDetails(authors);

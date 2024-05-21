@@ -1,9 +1,7 @@
 package com.example.gestiondepartement.service.implimentation;
 
-import com.example.gestiondepartement.rest.ChangementEquipeDTO;
-import com.example.gestiondepartement.rest.DoctorantDTO;
-import com.example.gestiondepartement.rest.ProfesseurDTO;
-import com.example.gestiondepartement.rest.ProfesseurSearchDTO;
+import com.example.gestiondepartement.dao.Membre;
+import com.example.gestiondepartement.rest.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,4 +36,6 @@ public interface ProfesseurService {
     List<ProfesseurDTO> getBureau();
 
     List<ProfesseurDTO> allProfNoPA();
+
+    ProfesseurSearchDTO getMembreById(Long id);
 }
